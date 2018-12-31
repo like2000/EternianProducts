@@ -1,10 +1,11 @@
 package ch.li.k.eternianproducts;
 
-import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import java.util.zip.Inflater;
+import java.util.List;
 
 import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
 
@@ -30,13 +33,18 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(R.layout.activity_main);
         ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
-        TableLayout tableLayout = findViewById(R.id.taskTable);
-        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-        TableRow row = (TableRow) inflater.inflate(R.layout.task_table_row, tableLayout, false);
-        tableLayout.addView(row);
-
         taskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
-//        taskViewModel.getN
+        taskViewModel.getArg1().observe(this, new Observer<List<Integer>>() {
+            @Override
+            public void onChanged(@Nullable List<Integer> integers) {
+
+            }
+        });
+
+        final TableLayout tableLayout = findViewById(R.id.taskTable);
+        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+        TableRow row = (TableRow) inflater.inflate(R.layout.view_table_row, tableLayout, false);
+        tableLayout.addView(row);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,8 +53,19 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+
+//                View image = findViewById(R.layout.view_floating_image);
+//                LayoutInflater imgInflater = LayoutInflater.from(MainActivity.this);
+//                ImageView img_animation = imgInflater.inflate(R.layout.view_floating_image, image, false);
+//
+//                TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f,
+//                        800.0f, 400.0f);
+//                animation.setDuration(1000);  // animation duration
+//                //animation.setFillAfter(true);
+//
+//                img_animation.startAnimation(animation);  // start animation
             }
         });
     }

@@ -1,64 +1,82 @@
 package ch.li.k.eternianproducts;
 
+import android.arch.lifecycle.MutableLiveData;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class TaskGenerator {
 
-    private static int n_tasks;
+    private int n_tasks;
+
     private static final int bound2 = 2;
     private static final int bound10 = 10;
     private static final String[] ops = {"*", "\u00F7"};
 
-    private List<Integer> arg1;
-    private List<Integer> arg2;
-    private List<String> operators;
-
-    private Random rng2;
-    private Random rng10;
+    private MutableLiveData<List<Integer>> arg1;
+    private MutableLiveData<List<Integer>> arg2;
+    private MutableLiveData<List<String>> operator;
 
     public TaskGenerator(int n_tasks) {
 
         this.n_tasks = n_tasks;
-        rng2 = new Random();
-        rng10 = new Random();
 
-        arg1 = new ArrayList<>(n_tasks);
-        arg2 = new ArrayList<>(n_tasks);
-        operators = new ArrayList<>(n_tasks);
+        Random rng2 = new Random();
+        Random rng10 = new Random();
+
+        arg1 = new MutableLiveData<>();
+        arg2 = new MutableLiveData<>();
+        operator = new MutableLiveData<>();
+
+        ArrayList<Integer> u = new ArrayList<>(n_tasks);
+        ArrayList<Integer> v = new ArrayList<>(n_tasks);
+        ArrayList<String> w = new ArrayList<>(n_tasks);
 
         for (int i=0; i<n_tasks; i++) {
-            arg1.add(i, rng10.nextInt(bound10));
-            arg2.add(i, rng10.nextInt(bound10));
-            operators.add(i, ops[rng2.nextInt(bound2)]);
+            u.add(i, rng10.nextInt(bound10));
+            v.add(i, rng10.nextInt(bound10));
+            w.add(i, ops[rng2.nextInt(bound2)]);
         }
-        System.out.println(arg1);
-        System.out.println(arg2);
-        System.out.println(operators);
+
+        setArg1(u);
+        setArg2(v);
+        setOperator(w);
+        System.out.println(arg1.getValue());
+        System.out.println(arg2.getValue());
+        System.out.println(operator.getValue());
     }
 
-    public List<Integer> getArg1() {
+    public MutableLiveData<List<Integer>> getArg1() {
+        if (arg1 == null) {
+            arg1 = new MutableLiveData<>();
+        }
         return arg1;
     }
 
     public void setArg1(List<Integer> arg1) {
-        this.arg1 = arg1;
+        this.arg1.setValue(arg1);
     }
 
-    public List<Integer> getArg2() {
+    public MutableLiveData<List<Integer>> getArg2() {
+        if (arg2 == null) {
+            arg2 = new MutableLiveData<>();
+        }
         return arg2;
     }
 
     public void setArg2(List<Integer> arg2) {
-        this.arg2 = arg2;
+        this.arg2.setValue(arg2);
     }
 
-    public List<String> getOperators() {
-        return operators;
+    public MutableLiveData<List<String>> getOperator() {
+        if (operator == null) {
+            operator = new MutableLiveData<>();
+        }
+        return operator;
     }
 
-    public void setOperators(List<String> operators) {
-        this.operators = operators;
+    public void setOperator(List<String> operator) {
+        this.operator.setValue(operator);
     }
 }
