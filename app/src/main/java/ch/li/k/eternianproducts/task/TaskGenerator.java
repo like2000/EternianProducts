@@ -1,4 +1,4 @@
-package ch.li.k.eternianproducts;
+package ch.li.k.eternianproducts.task;
 
 import android.arch.lifecycle.MutableLiveData;
 
@@ -12,7 +12,11 @@ public class TaskGenerator {
 
     private static final int bound2 = 2;
     private static final int bound10 = 10;
-    private static final String[] ops = {"*", "\u00F7"};
+    private static final String[] ops = {"+", "+"};
+//    private static final String[] ops = {"*", "\u00F7"};
+
+    private static final Random rng2 = new Random();
+    private static final Random rng10 = new Random();
 
     private MutableLiveData<List<Integer>> arg1;
     private MutableLiveData<List<Integer>> arg2;
@@ -21,9 +25,6 @@ public class TaskGenerator {
     public TaskGenerator(int n_tasks) {
 
         this.n_tasks = n_tasks;
-
-        Random rng2 = new Random();
-        Random rng10 = new Random();
 
         arg1 = new MutableLiveData<>();
         arg2 = new MutableLiveData<>();
@@ -45,6 +46,23 @@ public class TaskGenerator {
         System.out.println(arg1.getValue());
         System.out.println(arg2.getValue());
         System.out.println(operator.getValue());
+    }
+
+    public void updateTaskList() {
+
+        ArrayList<Integer> u = new ArrayList<>(n_tasks);
+        ArrayList<Integer> v = new ArrayList<>(n_tasks);
+        ArrayList<String> w = new ArrayList<>(n_tasks);
+
+        for (int i=0; i<n_tasks; i++) {
+            u.add(i, rng10.nextInt(bound10));
+            v.add(i, rng10.nextInt(bound10));
+            w.add(i, ops[rng2.nextInt(bound2)]);
+        }
+
+        setArg1(u);
+        setArg2(v);
+        setOperator(w);
     }
 
     public MutableLiveData<List<Integer>> getArg1() {
@@ -78,5 +96,9 @@ public class TaskGenerator {
 
     public void setOperator(List<String> operator) {
         this.operator.setValue(operator);
+    }
+
+    public int getN_tasks() {
+        return n_tasks;
     }
 }

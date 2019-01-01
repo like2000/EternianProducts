@@ -9,39 +9,52 @@
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/arg11"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@android:color/holo_orange_light" />
+            android:background="@color/silverTrans"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/operator1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="x"
+            android:background="@color/silverTrans"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_orange_light" />
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/arg12"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@android:color/holo_orange_light" />
+            android:background="@color/silverTrans"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/result1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:background="@color/silverTrans"
             android:ems="10"
+            android:hint="@string/edit_text_ph"
             android:inputType="number"
-            android:textColor="@android:color/holo_orange_light" />
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:autofillHints="" />
 
         <View
             android:id="@+id/divider"
@@ -55,31 +68,44 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@android:color/holo_orange_light" />
+            android:background="@color/silverTrans"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/operator2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="/"
+            android:background="@color/silverTrans"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_orange_light" />
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/arg22"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:textColor="@android:color/holo_orange_light" />
+            android:background="@color/silverTrans"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/result2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:background="@color/silverTrans"
             android:ems="10"
+            android:hint="@string/edit_text_ph"
             android:inputType="number"
-            android:textColor="@android:color/holo_orange_light" />
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="20sp"
+            android:autofillHints="" />
     </TableRow>
 </layout>

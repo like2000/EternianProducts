@@ -6,4 +6,6 @@
     <color name="colorPrimary">#011a1a</color>
     <color name="colorPrimaryDark">#2c3d94</color>
     <color name="colorAccent">#b72c24</color>
+
+    <color name="silverTrans">#a0c0c0c0</color>
 </resources>

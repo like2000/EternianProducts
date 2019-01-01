@@ -6,6 +6,8 @@ import android.arch.lifecycle.LiveData;
 
 import java.util.List;
 
+import ch.li.k.eternianproducts.task.TaskGenerator;
+
 public class TaskViewModel extends AndroidViewModel {
 
     private static final int nTasks = 10;

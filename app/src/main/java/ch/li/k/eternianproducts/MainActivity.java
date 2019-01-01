@@ -2,26 +2,26 @@ package ch.li.k.eternianproducts;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import java.util.List;
 
 import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
+import ch.li.k.eternianproducts.task.TaskGenerator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,18 +33,28 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(R.layout.activity_main);
         ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
-        taskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
-        taskViewModel.getArg1().observe(this, new Observer<List<Integer>>() {
-            @Override
-            public void onChanged(@Nullable List<Integer> integers) {
+        final RecyclerView taskList = findViewById(R.id.taskList);
+        final TaskGenerator taskGenerator = new TaskGenerator(10);
+        final TaskTableRowAdapter adapter = new TaskTableRowAdapter(this, taskGenerator);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+//        taskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
+//        taskViewModel.getArg1().observe(this, new Observer<List<Integer>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Integer> integers) {
+//
+//            }
+//        });
+        taskList.setLayoutManager(layoutManager);
+        adapter.notifyDataSetChanged();
+        taskList.setAdapter(adapter);
 
-            }
-        });
-
-        final TableLayout tableLayout = findViewById(R.id.taskTable);
-        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-        TableRow row = (TableRow) inflater.inflate(R.layout.view_table_row, tableLayout, false);
-        tableLayout.addView(row);
+        ProgressBar progress = findViewById(R.id.progressBar);
+//        progress.setProgressDrawable(getResources().getDrawable(R.drawable.orko));
+        progress.setProgress(80);
+//        final TableLayout tableLayout = findViewById(R.id.taskTable);
+//        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+//        TableRow row = (TableRow) inflater.inflate(R.layout.view_task_row, tableLayout, false);
+//        tableLayout.addView(row);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                taskGenerator.updateTaskList();
+                adapter.notifyDataSetChanged();
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
 
