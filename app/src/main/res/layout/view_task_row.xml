@@ -19,7 +19,7 @@
             android:background="@color/silverTrans"
             android:textAlignment="textEnd"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:background="@color/silverTrans"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_weight="2"
             android:background="@color/silverTrans"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <EditText
@@ -48,13 +48,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:autofillHints=""
             android:background="@color/silverTrans"
             android:ems="10"
             android:hint="@string/edit_text_ph"
             android:inputType="number"
+            android:textAlignment="textStart"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
-            android:autofillHints="" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <View
             android:id="@+id/divider"
@@ -71,7 +73,7 @@
             android:background="@color/silverTrans"
             android:textAlignment="textEnd"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -82,7 +84,7 @@
             android:background="@color/silverTrans"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -92,7 +94,7 @@
             android:layout_weight="2"
             android:background="@color/silverTrans"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <EditText
@@ -100,12 +102,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:autofillHints=""
             android:background="@color/silverTrans"
             android:ems="10"
             android:hint="@string/edit_text_ph"
             android:inputType="number"
+            android:textAlignment="textStart"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="20sp"
-            android:autofillHints="" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </TableRow>
 </layout>

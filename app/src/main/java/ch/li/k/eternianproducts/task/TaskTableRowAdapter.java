@@ -54,7 +54,7 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
         int secondPosition = position + getItemCount();
         holder.arg21.setText(String.format(Locale.GERMAN, "%d", taskGenerator.getArg1().getValue().get(secondPosition)));
         holder.arg22.setText(String.format(Locale.GERMAN, "%d", taskGenerator.getArg2().getValue().get(secondPosition)));
-        holder.operator2.setText(taskGenerator.getOperator().getValue().get(secondPosition + getItemCount()));
+        holder.operator2.setText(taskGenerator.getOperator().getValue().get(secondPosition));
         holder.result2.setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
                 try {
