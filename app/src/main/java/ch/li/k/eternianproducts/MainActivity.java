@@ -1,27 +1,22 @@
 package ch.li.k.eternianproducts;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-
-import java.util.List;
 
 import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
 import ch.li.k.eternianproducts.task.TaskGenerator;
+import ch.li.k.eternianproducts.task.TaskTableRowAdapter;
+import ch.li.k.eternianproducts.task.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
         final RecyclerView taskList = findViewById(R.id.taskList);
-        final TaskGenerator taskGenerator = new TaskGenerator(10);
+        final TaskGenerator taskGenerator = new TaskGenerator(12);
         final TaskTableRowAdapter adapter = new TaskTableRowAdapter(this, taskGenerator);
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
 //        taskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
@@ -44,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
+        taskList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         taskList.setLayoutManager(layoutManager);
-        adapter.notifyDataSetChanged();
         taskList.setAdapter(adapter);
 
         ProgressBar progress = findViewById(R.id.progressBar);
@@ -56,13 +51,11 @@ public class MainActivity extends AppCompatActivity {
 //        TableRow row = (TableRow) inflater.inflate(R.layout.view_task_row, tableLayout, false);
 //        tableLayout.addView(row);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener((view) -> {
                 taskGenerator.updateTaskList();
                 adapter.notifyDataSetChanged();
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -78,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 //                //animation.setFillAfter(true);
 //
 //                img_animation.startAnimation(animation);  // start animation
-            }
         });
     }
 

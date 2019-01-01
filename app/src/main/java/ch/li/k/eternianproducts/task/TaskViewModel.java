@@ -1,4 +1,4 @@
-package ch.li.k.eternianproducts;
+package ch.li.k.eternianproducts.task;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
