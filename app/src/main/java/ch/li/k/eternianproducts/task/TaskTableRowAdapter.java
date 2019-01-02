@@ -2,7 +2,6 @@ package ch.li.k.eternianproducts.task;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,19 +33,23 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
     @Override // <-- triggered by notifyChanged()
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         int firstPosition = position;
-        holder.arg11.setText(String.format(Locale.GERMAN, "%d", taskGenerator.getArg1().getValue().get(firstPosition)));
+        holder.arg11.setText(taskGenerator.getArg1().getValue().get(firstPosition).toString());
         holder.arg12.setText(taskGenerator.getArg2().getValue().get(firstPosition).toString());
         holder.operator1.setText(taskGenerator.getOperator().getValue().get(firstPosition));
+        // TODO: Here there is a problem with the check result thingie
         holder.result1.setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
                 try {
-                    taskGenerator.checkResult(firstPosition, Integer.parseInt(holder.result1.getText().toString()));
-                    if (taskGenerator.getResult().getValue().get(firstPosition)) {
+                    taskGenerator.checkResult(Integer.parseInt(holder.result1.getText().toString()), firstPosition);
+                    if (taskGenerator.getResult().getValue().get(firstPosition) == null) {
+                        holder.result1.setBackgroundResource(R.color.silverTrans);
+                    } else if (taskGenerator.getResult().getValue().get(firstPosition)) {
                         holder.result1.setBackgroundResource(R.color.greenTrans);
                     } else {
                         holder.result1.setBackgroundResource(R.color.redTrans);
                     }
-                } catch (NumberFormatException exception) {
+                }
+                catch (NumberFormatException exception) {
                 }
             }
         });
@@ -58,13 +61,16 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
         holder.result2.setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
                 try {
-                    taskGenerator.checkResult(secondPosition, Integer.parseInt(holder.result1.getText().toString()));
-                    if (taskGenerator.getResult().getValue().get(secondPosition)) {
-                        holder.result1.setBackgroundResource(R.color.greenTrans);
+                    taskGenerator.checkResult(Integer.parseInt(holder.result2.getText().toString()), secondPosition);
+                    if (taskGenerator.getResult().getValue().get(secondPosition) == null) {
+                        holder.result2.setBackgroundResource(R.color.silverTrans);
+                    } else if (taskGenerator.getResult().getValue().get(secondPosition)) {
+                        holder.result2.setBackgroundResource(R.color.greenTrans);
                     } else {
-                        holder.result1.setBackgroundResource(R.color.redTrans);
+                        holder.result2.setBackgroundResource(R.color.redTrans);
                     }
-                } catch (NumberFormatException exception) {
+                }
+                catch (NumberFormatException exception) {
                 }
             }
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -74,7 +80,7 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
 
     @Override
     public int getItemCount() {
-        return taskGenerator.getN_tasks()/2;
+        return taskGenerator.getN_tasks() / 2;
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {

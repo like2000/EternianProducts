@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HourGlassActivity"></activity>
+        <activity android:name=".HourGlassActivity" />
+        <activity android:name=".CountdownActivity"></activity>
     </application>
 
 </manifest>

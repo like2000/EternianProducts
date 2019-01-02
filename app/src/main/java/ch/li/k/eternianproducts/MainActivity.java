@@ -2,15 +2,19 @@ package ch.li.k.eternianproducts;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.transition.TransitionManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
@@ -54,23 +58,52 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        CountDownTimer countdown = new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        };
+        countdown.start();
+
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener((view) -> {
+        fab.setOnClickListener(new View.OnClickListener() {
+//            boolean visible = false;
+
+            @Override
+            public void onClick(View view) {
                 taskGenerator.updateTaskList();
                 adapter.notifyDataSetChanged();
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
 
-//                View image = findViewById(R.layout.view_floating_image);
-//                LayoutInflater imgInflater = LayoutInflater.from(MainActivity.this);
-//                ImageView img_animation = imgInflater.inflate(R.layout.view_floating_image, image, false);
-//
-//                TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f,
-//                        800.0f, 400.0f);
-//                animation.setDuration(1000);  // animation duration
-//                //animation.setFillAfter(true);
-//
-//                img_animation.startAnimation(animation);  // start animation
+                LinearLayout animationBar = findViewById(R.id.animationBar);
+                LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+                View animatedImage = inflater.inflate(R.layout.view_floating_orko, animationBar);
+
+                TransitionManager.beginDelayedTransition(animationBar);
+                animatedImage.setVisibility(View.VISIBLE);
+                animatedImage.postDelayed(() -> {
+                    TransitionManager.beginDelayedTransition(animationBar);
+                    animatedImage.setVisibility(View.GONE);
+                }, 3000);
+//                visible = !visible;
+//                animatedImage.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+//            countdown.start();
+//            TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f,
+//                    0.0f, 20.0f);
+//            animation.setDuration(1000);  // animation duration
+//            animation.setFillAfter(true);
+//            imageView.startAnimation(animation);  // start animation
+
+//            Snackbar.make(view, imageView.toString(), Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show();
+
+            }
         });
     }
 

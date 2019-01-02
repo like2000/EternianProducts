@@ -29,6 +29,11 @@ public class TaskGenerator {
         result = new MutableLiveData<>();
         operator = new MutableLiveData<>();
 
+        updateTaskList();
+    }
+
+    public void updateTaskList() {
+
         ArrayList<Boolean> r = new ArrayList<>(n_tasks);
         ArrayList<Integer> u = new ArrayList<>(n_tasks);
         ArrayList<Integer> v = new ArrayList<>(n_tasks);
@@ -47,18 +52,9 @@ public class TaskGenerator {
         setOperator(w);
     }
 
-    public void updateTaskList() {
-
-        for (int i = 0; i < n_tasks; i++) {
-            getArg1().getValue().add(i, rng10.nextInt(bound10));
-            getArg2().getValue().add(i, rng10.nextInt(bound10));
-            getOperator().getValue().add(i, ops[rng2.nextInt(bound2)]);
-        }
-    }
-
-    public void checkResult(int i, int result) {
-        Boolean out = getArg1().getValue().get(i) + getArg2().getValue().get(i) == result;
-        this.result.getValue().add(i, out);
+    public void checkResult(int result, int i) {
+        Boolean out = ((getArg1().getValue().get(i) + getArg2().getValue().get(i)) == result);
+        getResult().getValue().set(i, out);
     }
 
     public MutableLiveData<List<Integer>> getArg1() {
