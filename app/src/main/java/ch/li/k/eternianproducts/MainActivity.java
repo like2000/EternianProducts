@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
         taskList.setLayoutManager(layoutManager);
         taskList.setAdapter(adapter);
 
-        ProgressBar progress = findViewById(R.id.progressBar);
+//        ProgressBar progress = findViewById(R.id.progressBar);
 //        progress.setProgressDrawable(getResources().getDrawable(R.drawable.orko));
-        progress.setProgress(80);
+//        progress.setProgress(80);
 //        final TableLayout tableLayout = findViewById(R.id.taskTable);
 //        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
 //        TableRow row = (TableRow) inflater.inflate(R.layout.view_task_row, tableLayout, false);

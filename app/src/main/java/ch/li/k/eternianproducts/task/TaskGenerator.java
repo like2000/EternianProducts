@@ -45,8 +45,8 @@ public class TaskGenerator {
         for (int i = 0; i < n_tasks; i++) {
             r.add(i, null);
 
-            a = rng10.nextInt(bound10);
-            b = rng10.nextInt(bound10);
+            a = rng10.nextInt(bound10) + 1;
+            b = rng10.nextInt(bound10) + 1;
             op = ops[rng2.nextInt(bound2)];
 
             if (op.equals("*")) {
