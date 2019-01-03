@@ -26,7 +26,7 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.view_task_row, parent, false);
+        View itemView = inflater.inflate(R.layout.row_task_list, parent, false);
         return new TaskViewHolder(itemView);
     }
 
@@ -36,20 +36,21 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
         holder.arg11.setText(taskGenerator.getArg1().getValue().get(firstPosition).toString());
         holder.arg12.setText(taskGenerator.getArg2().getValue().get(firstPosition).toString());
         holder.operator1.setText(taskGenerator.getOperator().getValue().get(firstPosition));
-        // TODO: Here there is a problem with the check result thingie
+
+        System.out.println("\n\n-->");
+        System.out.println(position);
+        holder.result1.getText().clear();
+        holder.result1.setBackgroundResource(R.color.silverTrans);
         holder.result1.setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
                 try {
                     taskGenerator.checkResult(Integer.parseInt(holder.result1.getText().toString()), firstPosition);
-                    if (taskGenerator.getResult().getValue().get(firstPosition) == null) {
-                        holder.result1.setBackgroundResource(R.color.silverTrans);
-                    } else if (taskGenerator.getResult().getValue().get(firstPosition)) {
+                    if (taskGenerator.getResult().getValue().get(firstPosition)) {
                         holder.result1.setBackgroundResource(R.color.greenTrans);
                     } else {
                         holder.result1.setBackgroundResource(R.color.redTrans);
                     }
-                }
-                catch (NumberFormatException exception) {
+                } catch (NumberFormatException exception) {
                 }
             }
         });
@@ -58,19 +59,19 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
         holder.arg21.setText(String.format(Locale.GERMAN, "%d", taskGenerator.getArg1().getValue().get(secondPosition)));
         holder.arg22.setText(String.format(Locale.GERMAN, "%d", taskGenerator.getArg2().getValue().get(secondPosition)));
         holder.operator2.setText(taskGenerator.getOperator().getValue().get(secondPosition));
+
+        holder.result2.getText().clear();
+        holder.result2.setBackgroundResource(R.color.silverTrans);
         holder.result2.setOnFocusChangeListener((view, hasFocus) -> {
             if (!hasFocus) {
                 try {
                     taskGenerator.checkResult(Integer.parseInt(holder.result2.getText().toString()), secondPosition);
-                    if (taskGenerator.getResult().getValue().get(secondPosition) == null) {
-                        holder.result2.setBackgroundResource(R.color.silverTrans);
-                    } else if (taskGenerator.getResult().getValue().get(secondPosition)) {
+                    if (taskGenerator.getResult().getValue().get(secondPosition)) {
                         holder.result2.setBackgroundResource(R.color.greenTrans);
                     } else {
                         holder.result2.setBackgroundResource(R.color.redTrans);
                     }
-                }
-                catch (NumberFormatException exception) {
+                } catch (NumberFormatException exception) {
                 }
             }
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

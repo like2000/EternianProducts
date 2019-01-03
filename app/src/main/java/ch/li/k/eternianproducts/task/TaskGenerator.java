@@ -10,9 +10,9 @@ public class TaskGenerator {
 
     private static final int bound2 = 2;
     private static final int bound10 = 10;
-    private static final String[] ops = {"+", "+"};
+    //    private static final String[] ops = {"+", "+"};
     private static final Random rng2 = new Random();
-    //    private static final String[] ops = {"*", "\u00F7"};
+    private static final String[] ops = {"*", "\u00F7"};
     private static final Random rng10 = new Random();
     private int n_tasks;
     private MutableLiveData<List<Integer>> arg1;
@@ -34,6 +34,9 @@ public class TaskGenerator {
 
     public void updateTaskList() {
 
+        int a, b;
+        String op;
+
         ArrayList<Boolean> r = new ArrayList<>(n_tasks);
         ArrayList<Integer> u = new ArrayList<>(n_tasks);
         ArrayList<Integer> v = new ArrayList<>(n_tasks);
@@ -41,9 +44,21 @@ public class TaskGenerator {
 
         for (int i = 0; i < n_tasks; i++) {
             r.add(i, null);
-            u.add(i, rng10.nextInt(bound10));
-            v.add(i, rng10.nextInt(bound10));
-            w.add(i, ops[rng2.nextInt(bound2)]);
+
+            a = rng10.nextInt(bound10);
+            b = rng10.nextInt(bound10);
+            op = ops[rng2.nextInt(bound2)];
+
+            if (op.equals("*")) {
+                u.add(i, a);
+                v.add(i, b);
+                w.add(i, op);
+            }
+            else if (op.equals("\u00F7")) {
+                u.add(i, a*b);
+                v.add(i, b);
+                w.add(i, op);
+            }
         }
 
         setArg1(u);
@@ -53,7 +68,13 @@ public class TaskGenerator {
     }
 
     public void checkResult(int result, int i) {
-        Boolean out = ((getArg1().getValue().get(i) + getArg2().getValue().get(i)) == result);
+        boolean out = false;
+        if ("*".equals(getOperator().getValue().get(i))) {
+            out = ((getArg1().getValue().get(i) * getArg2().getValue().get(i)) == result);
+        }
+        else if ("\u00F7".equals(getOperator().getValue().get(i))) {
+            out = ((getArg1().getValue().get(i) / getArg2().getValue().get(i)) == result);
+        }
         getResult().getValue().set(i, out);
     }
 

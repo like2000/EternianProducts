@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
         final RecyclerView taskList = findViewById(R.id.taskList);
-        final TaskGenerator taskGenerator = new TaskGenerator(12);
+        final TaskGenerator taskGenerator = new TaskGenerator(14);
         final TaskTableRowAdapter adapter = new TaskTableRowAdapter(this, taskGenerator);
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
 //        taskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
@@ -61,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
         CountDownTimer countdown = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long l) {
-
+                LinearLayout animationTopBar = findViewById(R.id.animationTopBar);
+                LayoutInflater inflaterTop = LayoutInflater.from(MainActivity.this);
+                View imageTop = inflaterTop.inflate(R.layout.image_skeletor, animationTopBar);
             }
 
             @Override
@@ -80,18 +82,18 @@ public class MainActivity extends AppCompatActivity {
                 taskGenerator.updateTaskList();
                 adapter.notifyDataSetChanged();
 
-                LinearLayout animationBar = findViewById(R.id.animationBar);
-                LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-                View animatedImage = inflater.inflate(R.layout.view_floating_orko, animationBar);
+                LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
+                LayoutInflater inflaterBottom = LayoutInflater.from(MainActivity.this);
+                View imageBottom = inflaterBottom.inflate(R.layout.image_orko, animationBottomBar);
 
-                TransitionManager.beginDelayedTransition(animationBar);
-                animatedImage.setVisibility(View.VISIBLE);
-                animatedImage.postDelayed(() -> {
-                    TransitionManager.beginDelayedTransition(animationBar);
-                    animatedImage.setVisibility(View.GONE);
-                }, 3000);
+                TransitionManager.beginDelayedTransition(animationBottomBar);
+                imageBottom.setVisibility(View.VISIBLE);
+                imageBottom.postDelayed(() -> {
+                    TransitionManager.beginDelayedTransition(animationBottomBar);
+                    imageBottom.setVisibility(View.GONE);
+                }, 1500);
 //                visible = !visible;
-//                animatedImage.setVisibility(visible ? View.VISIBLE : View.GONE);
+//                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
 
 //            countdown.start();
 //            TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f,

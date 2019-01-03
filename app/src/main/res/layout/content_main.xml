@@ -26,6 +26,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <LinearLayout
+            android:id="@+id/animationTopBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="0dp"
@@ -51,7 +57,7 @@
         </android.support.v7.widget.RecyclerView>
 
         <LinearLayout
-            android:id="@+id/animationBar"
+            android:id="@+id/animationBottomBar"
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:layout_marginBottom="16dp"
