@@ -3,6 +3,7 @@ package ch.li.k.eternianproducts.task;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,15 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import ch.li.k.eternianproducts.MainActivity;
 import ch.li.k.eternianproducts.R;
 
-public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapter.TaskViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private LayoutInflater inflater;
     private TaskGenerator taskGenerator;
 
-    public TaskTableRowAdapter(Context context, TaskGenerator taskGenerator) {
+    public TaskAdapter(Context context, TaskGenerator taskGenerator) {
         this.inflater = LayoutInflater.from(context);
         this.taskGenerator = taskGenerator;
     }
@@ -51,8 +53,16 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
                         holder.result1.setBackgroundResource(R.color.redTrans);
                     }
                 } catch (NumberFormatException exception) {
+                    holder.result1.setBackgroundResource(R.color.silverTrans);
                 }
             }
+        });
+        holder.result1.setOnKeyListener((View view, int i, KeyEvent keyEvent) -> {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    this.regsiterResult(holder, position);
+                    return true;
+                }
+                return false;
         });
 
         int secondPosition = position + getItemCount();
@@ -72,11 +82,36 @@ public class TaskTableRowAdapter extends RecyclerView.Adapter<TaskTableRowAdapte
                         holder.result2.setBackgroundResource(R.color.redTrans);
                     }
                 } catch (NumberFormatException exception) {
+                    holder.result2.setBackgroundResource(R.color.silverTrans);
                 }
             }
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show();
         });
+        holder.result2.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+                    holder.result2.clearFocus();
+//                    MainActivity.this.findViewById(R.layout.activity_main).requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public void regsiterResult(TaskViewHolder holder, int firstPosition) {
+        try {
+            taskGenerator.checkResult(Integer.parseInt(holder.result1.getText().toString()), firstPosition);
+            if (taskGenerator.getResult().getValue().get(firstPosition)) {
+                holder.result1.setBackgroundResource(R.color.greenTrans);
+            } else {
+                holder.result1.setBackgroundResource(R.color.redTrans);
+            }
+        } catch (NumberFormatException exception) {
+            holder.result1.setBackgroundResource(R.color.silverTrans);
+        }
     }
 
     @Override

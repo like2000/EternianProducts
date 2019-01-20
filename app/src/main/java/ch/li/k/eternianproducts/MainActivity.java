@@ -15,11 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
 import ch.li.k.eternianproducts.task.TaskGenerator;
-import ch.li.k.eternianproducts.task.TaskTableRowAdapter;
+import ch.li.k.eternianproducts.task.TaskAdapter;
 import ch.li.k.eternianproducts.task.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         final RecyclerView taskList = findViewById(R.id.taskList);
         final TaskGenerator taskGenerator = new TaskGenerator(14);
-        final TaskTableRowAdapter adapter = new TaskTableRowAdapter(this, taskGenerator);
+        final TaskAdapter adapter = new TaskAdapter(this, taskGenerator);
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
 //        taskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 //        taskViewModel.getArg1().observe(this, new Observer<List<Integer>>() {
@@ -58,40 +57,42 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        CountDownTimer countdown = new CountDownTimer(5000, 1000) {
+        final float timeout = 3 * 60 * 1000;
+        CountDownTimer countdown = new CountDownTimer((long) timeout, 3000) {
             @Override
             public void onTick(long l) {
                 LinearLayout animationTopBar = findViewById(R.id.animationTopBar);
-                LayoutInflater inflaterTop = LayoutInflater.from(MainActivity.this);
-                View imageTop = inflaterTop.inflate(R.layout.image_skeletor, animationTopBar);
+                View imageTop = LayoutInflater.from(MainActivity.this).inflate(R.layout.animation_skeletor, animationTopBar);
+                imageTop.setAlpha((float) ((timeout - l) / timeout));
+//                System.out.println((float) ((timeout - l)/timeout) + "  " + l);
             }
 
             @Override
             public void onFinish() {
 
+                System.out.println("Game over!");
+//                System.exit(-1);
             }
         };
         countdown.start();
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-//            boolean visible = false;
+        fab.setOnClickListener((View view) -> {
+            taskGenerator.updateTaskList();
+            adapter.notifyDataSetChanged();
 
-            @Override
-            public void onClick(View view) {
-                taskGenerator.updateTaskList();
-                adapter.notifyDataSetChanged();
+            LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
+            LayoutInflater inflaterBottom = LayoutInflater.from(MainActivity.this);
+            View imageBottom = inflaterBottom.inflate(R.layout.animation_orko, animationBottomBar);
 
-                LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
-                LayoutInflater inflaterBottom = LayoutInflater.from(MainActivity.this);
-                View imageBottom = inflaterBottom.inflate(R.layout.image_orko, animationBottomBar);
-
+            TransitionManager.beginDelayedTransition(animationBottomBar);
+            imageBottom.setVisibility(View.VISIBLE);
+            imageBottom.postDelayed(() -> {
                 TransitionManager.beginDelayedTransition(animationBottomBar);
-                imageBottom.setVisibility(View.VISIBLE);
-                imageBottom.postDelayed(() -> {
-                    TransitionManager.beginDelayedTransition(animationBottomBar);
-                    imageBottom.setVisibility(View.GONE);
-                }, 1500);
+                imageBottom.setVisibility(View.GONE);
+            }, 1500);
+
+            countdown.start();
 //                visible = !visible;
 //                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
 
@@ -104,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
 //            Snackbar.make(view, imageView.toString(), Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show();
-
-            }
         });
     }
 

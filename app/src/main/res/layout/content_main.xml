@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/motu_background"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:scaleType="centerCrop"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".MainActivity"
@@ -21,7 +23,9 @@
             android:name="ch.li.k.eternianproducts.ui.countdown.CountdownFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,33 +33,23 @@
             android:id="@+id/animationTopBar"
             android:layout_width="match_parent"
             android:layout_height="160dp"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="160dp"
-            android:layout_marginTop="8dp"
-            android:alpha="0.8"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/skeletor" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/taskList"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="170dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/animationTopBar">
 
         </android.support.v7.widget.RecyclerView>
 

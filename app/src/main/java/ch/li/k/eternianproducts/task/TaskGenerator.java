@@ -12,7 +12,8 @@ public class TaskGenerator {
     private static final int bound10 = 10;
     //    private static final String[] ops = {"+", "+"};
     private static final Random rng2 = new Random();
-    private static final String[] ops = {"*", "\u00F7"};
+//    private static final String[] ops = {"*", "\u00F7"};
+    private static final String[] ops = {"*", "*"};
     private static final Random rng10 = new Random();
     private int n_tasks;
     private MutableLiveData<List<Integer>> arg1;

@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Eternian Products</string>
     <string name="action_settings">Settings</string>
-    <string name="edit_text_ph">Result</string>
+    <string name="edit_text_ph">\?\?</string>
 </resources>
