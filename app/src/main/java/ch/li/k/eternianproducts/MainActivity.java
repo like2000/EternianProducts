@@ -1,11 +1,13 @@
 package ch.li.k.eternianproducts;
 
 import android.databinding.DataBindingUtil;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +25,7 @@ import ch.li.k.eternianproducts.task.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TaskViewModel taskViewModel;
+    private final int nTasks = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +33,47 @@ public class MainActivity extends AppCompatActivity {
 //        setContentView(R.layout.activity_main);
         ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
+        final float timeout = 3 * 60 * 1000;
+        final CountDownTimer countdown = new CountDownTimer((long) timeout, 3000) {
+            @Override
+            public void onTick(long l) {
+                LinearLayout animationTopBar = findViewById(R.id.animationTopBar);
+                View imageTop = LayoutInflater.from(MainActivity.this)
+                        .inflate(R.layout.animation_skeletor, animationTopBar);
+                imageTop.setAlpha((float) ((timeout - l) / timeout));
+            }
+
+            @Override
+            public void onFinish() {
+                LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
+                animationBottomBar.removeAllViews();
+                View imageBottom = LayoutInflater.from(MainActivity.this)
+                        .inflate(R.layout.animation_game_over, animationBottomBar);
+                imageBottom.setVisibility(View.GONE);
+
+                TransitionManager.beginDelayedTransition(animationBottomBar);
+                imageBottom.postDelayed(() -> {
+                    TransitionManager.beginDelayedTransition(animationBottomBar);
+                    imageBottom.setVisibility(View.VISIBLE);
+                }, 2000);
+
+                MediaPlayer player = MediaPlayer.create(MainActivity.this, R.raw.skeletor_laugh);
+                player.start();
+
+                System.out.println("Game over!");
+                this.cancel();
+//                System.exit(-1);
+            }
+        };
+        countdown.start();
+
         final RecyclerView taskList = findViewById(R.id.taskList);
-        final TaskGenerator taskGenerator = new TaskGenerator(14);
-        final TaskAdapter adapter = new TaskAdapter(this, taskGenerator);
-        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-//        taskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
-//        taskViewModel.getArg1().observe(this, new Observer<List<Integer>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Integer> integers) {
-//
-//            }
-//        });
-        taskList.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        final TaskGenerator taskGenerator = new TaskGenerator(nTasks);
+        final TaskAdapter adapter = new TaskAdapter(this, taskGenerator, countdown);
+        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+
+        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
+        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         taskList.setLayoutManager(layoutManager);
         taskList.setAdapter(adapter);
 
@@ -57,31 +88,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final float timeout = 3 * 60 * 1000;
-        CountDownTimer countdown = new CountDownTimer((long) timeout, 3000) {
-            @Override
-            public void onTick(long l) {
-                LinearLayout animationTopBar = findViewById(R.id.animationTopBar);
-                View imageTop = LayoutInflater.from(MainActivity.this).inflate(R.layout.animation_skeletor, animationTopBar);
-                imageTop.setAlpha((float) ((timeout - l) / timeout));
-//                System.out.println((float) ((timeout - l)/timeout) + "  " + l);
-            }
-
-            @Override
-            public void onFinish() {
-
-                System.out.println("Game over!");
-//                System.exit(-1);
-            }
-        };
-        countdown.start();
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> {
             taskGenerator.updateTaskList();
             adapter.notifyDataSetChanged();
 
             LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
+            animationBottomBar.removeAllViews();
             LayoutInflater inflaterBottom = LayoutInflater.from(MainActivity.this);
             View imageBottom = inflaterBottom.inflate(R.layout.animation_orko, animationBottomBar);
 
