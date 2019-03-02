@@ -5,11 +5,8 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -19,13 +16,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
-import ch.li.k.eternianproducts.task.TaskGenerator;
 import ch.li.k.eternianproducts.task.TaskAdapter;
-import ch.li.k.eternianproducts.task.TaskViewModel;
+import ch.li.k.eternianproducts.task.TaskFragment;
+import ch.li.k.eternianproducts.task.TaskGenerator;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int nTasks = 4;
+    private final int nTasks = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +64,23 @@ public class MainActivity extends AppCompatActivity {
         };
         countdown.start();
 
-        final RecyclerView taskList = findViewById(R.id.taskList);
-        final TaskGenerator taskGenerator = new TaskGenerator(nTasks);
-        final TaskAdapter adapter = new TaskAdapter(this, taskGenerator, countdown);
-        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        // Fragment
+        ///////////
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, new TaskFragment());
+        transaction.addToBackStack(null);
+        transaction.commit();
+        ///////////
 
-        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
-        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        taskList.setLayoutManager(layoutManager);
-        taskList.setAdapter(adapter);
+//        final RecyclerView taskList = findViewById(R.id.taskList);
+        final TaskGenerator taskGenerator = new TaskGenerator(nTasks);
+        final TaskAdapter adapter = new TaskAdapter(this, taskGenerator);
+//        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+
+//        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
+//        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+//        taskList.setLayoutManager(layoutManager);
+//        taskList.setAdapter(adapter);
 
 //        ProgressBar progress = findViewById(R.id.progressBar);
 //        progress.setProgressDrawable(getResources().getDrawable(R.drawable.orko));
@@ -108,16 +113,6 @@ public class MainActivity extends AppCompatActivity {
             countdown.start();
 //                visible = !visible;
 //                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
-
-//            countdown.start();
-//            TranslateAnimation animation = new TranslateAnimation(0.0f, 0.0f,
-//                    0.0f, 20.0f);
-//            animation.setDuration(1000);  // animation duration
-//            animation.setFillAfter(true);
-//            imageView.startAnimation(animation);  // start animation
-
-//            Snackbar.make(view, imageView.toString(), Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show();
         });
     }
 

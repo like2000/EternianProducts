@@ -1,30 +1,19 @@
 package ch.li.k.eternianproducts.task;
 
 import android.content.Context;
-import android.media.MediaPlayer;
+import android.databinding.ViewDataBinding;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.VideoView;
 
-import java.util.Locale;
-import java.util.Timer;
-import java.util.function.Predicate;
-
-import ch.li.k.eternianproducts.MainActivity;
 import ch.li.k.eternianproducts.R;
-
-import static ch.li.k.eternianproducts.R.id.video_heman;
+import ch.li.k.eternianproducts.databinding.RowTaskListBinding;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
@@ -33,7 +22,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private TaskGenerator taskGenerator;
     private LinearLayout animationBottomBar;
 
-    public TaskAdapter(Context context, TaskGenerator taskGenerator, CountDownTimer countDownTimer) {
+    public TaskAdapter(Context context, TaskGenerator taskGenerator) {
         this.inflater = LayoutInflater.from(context);
         this.taskGenerator = taskGenerator;
 
@@ -44,6 +33,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     void play_video() {
         animationBottomBar.removeAllViews();
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.animation_heman, this.animationBottomBar);
+        layout.setVisibility(View.VISIBLE);
 
         VideoView video = layout.findViewById(R.id.video_heman);
         video.setVideoURI(this.videoUri);
@@ -53,6 +43,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         video.setOnCompletionListener((v) -> {
             System.out.println("Finish video!");
             video.stopPlayback();
+            video.seekTo(0);
         });
     }
 
@@ -65,54 +56,58 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override // <-- triggered by notifyChanged()
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        holder.arg1.setText(taskGenerator.getArg1().getValue().get(position).toString());
-        holder.arg2.setText(taskGenerator.getArg2().getValue().get(position).toString());
-        holder.operator.setText(taskGenerator.getOperator().getValue().get(position));
+//        TaskGenerator task = TaskGenerator.get(position);
 
-        holder.result.getText().clear();
-        holder.result.setBackgroundResource(R.color.silverTrans);
+//        holder.getBinding().setVariable(BR.taskGenerator)
 
-        holder.result.setOnFocusChangeListener((view, hasFocus) -> {
-            if (!hasFocus) {
-                try {
-                    taskGenerator.checkResult(Integer.parseInt(holder.result.getText().toString()), position);
-                    if (taskGenerator.getResult().getValue().get(position)) {
-                        holder.result.setBackgroundResource(R.color.greenTrans);
-                    } else {
-                        holder.result.setBackgroundResource(R.color.redTrans);
-                    }
-                } catch (NumberFormatException exception) {
-                    holder.result.setBackgroundResource(R.color.silverTrans);
-                }
-            }
-        });
-
-        holder.result.setOnKeyListener((View view, int i, KeyEvent keyEvent) -> {
-            if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
-                try {
-                    taskGenerator.checkResult(Integer.parseInt(holder.result.getText().toString()), position);
-                    if (taskGenerator.getResult().getValue().get(position)) {
-                        holder.result.setBackgroundResource(R.color.greenTrans);
-                    } else {
-                        holder.result.setBackgroundResource(R.color.redTrans);
-                    }
-                } catch (NumberFormatException exception) {
-                    holder.result.setBackgroundResource(R.color.silverTrans);
-                }
-
-                try {
-                    if (taskGenerator.getResult().getValue().stream().allMatch((Boolean result) -> result)) {
-                        play_video();
-                        System.out.println("Done!");
-                    }
-                } catch (NullPointerException exception) {
-//                    play_video();
-                    System.out.println("Not yet done!");
-                }
-                return true;
-            }
-            return false;
-        });
+        //        holder.arg1.setText(taskGenerator.getArg1().getValue().get(position).toString());
+//        holder.arg2.setText(taskGenerator.getArg2().getValue().get(position).toString());
+//        holder.operator.setText(taskGenerator.getOperator().getValue().get(position));
+//
+//        holder.result.getText().clear();
+//        holder.result.setBackgroundResource(R.color.silverTrans);
+//
+//        holder.result.setOnFocusChangeListener((view, hasFocus) -> {
+//            if (!hasFocus) {
+//                try {
+//                    taskGenerator.checkResult(Integer.parseInt(holder.result.getText().toString()), position);
+//                    if (taskGenerator.getResult().getValue().get(position)) {
+//                        holder.result.setBackgroundResource(R.color.greenTrans);
+//                    } else {
+//                        holder.result.setBackgroundResource(R.color.redTrans);
+//                    }
+//                } catch (NumberFormatException exception) {
+//                    holder.result.setBackgroundResource(R.color.silverTrans);
+//                }
+//            }
+//        });
+//
+//        holder.result.setOnKeyListener((View view, int i, KeyEvent keyEvent) -> {
+//            if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
+//                try {
+//                    taskGenerator.checkResult(Integer.parseInt(holder.result.getText().toString()), position);
+//                    if (taskGenerator.getResult().getValue().get(position)) {
+//                        holder.result.setBackgroundResource(R.color.greenTrans);
+//                    } else {
+//                        holder.result.setBackgroundResource(R.color.redTrans);
+//                    }
+//                } catch (NumberFormatException exception) {
+//                    holder.result.setBackgroundResource(R.color.silverTrans);
+//                }
+//
+//                try {
+//                    if (taskGenerator.getResult().getValue().stream().allMatch((Boolean result) -> result)) {
+//                        play_video();
+//                        System.out.println("Done!");
+//                    }
+//                } catch (NullPointerException exception) {
+////                    play_video();
+//                    System.out.println("Not yet done!");
+//                }
+//                return true;
+//            }
+//            return false;
+//        });
     }
 
     @Override
@@ -121,17 +116,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {
-        public TextView arg1, arg2;
-        public TextView operator;
-        public EditText result;
+        ViewDataBinding binding;
+//        TextView arg1, arg2;
+//        TextView operator;
+//        EditText result;
 
-        public TaskViewHolder(@NonNull View itemView) {
+        TaskViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            arg1 = itemView.findViewById(R.id.arg1);
-            arg2 = itemView.findViewById(R.id.arg2);
-            result = itemView.findViewById(R.id.result);
-            operator = itemView.findViewById(R.id.operator);
+            binding = RowTaskListBinding.bind(itemView);
+
+//            arg1 = itemView.findViewById(R.id.arg1);
+//            arg2 = itemView.findViewById(R.id.arg2);
+//            result = itemView.findViewById(R.id.result);
+//            operator = itemView.findViewById(R.id.operator);
+        }
+
+        public ViewDataBinding getBinding() {
+            return binding;
         }
     }
 }

@@ -13,7 +13,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan|stateHidden">
+            android:windowSoftInputMode="stateVisible|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,7 +21,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".HourGlassActivity" />
-        <activity android:name=".CountdownActivity"></activity>
+        <activity android:name=".CountdownActivity" />
     </application>
 
 </manifest>
+
+    <!--|stateVisible||stateHidden-->
+    <!--<fragment android:name=".TaskFragment" />-->

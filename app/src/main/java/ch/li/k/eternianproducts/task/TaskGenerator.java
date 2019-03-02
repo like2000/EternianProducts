@@ -9,11 +9,11 @@ import java.util.Random;
 public class TaskGenerator {
 
     private static final int bound2 = 2;
-    private static final int bound10 = 10;
-    //    private static final String[] ops = {"+", "+"};
+    private static final int bound10 = 12;
+    private static final String[] ops = {"+", "+"};
     private static final Random rng2 = new Random();
-//    private static final String[] ops = {"*", "\u00F7"};
-    private static final String[] ops = {"*", "*"};
+    //    private static final String[] ops = {"*", "\u00F7"};
+//    private static final String[] ops = {"*", "*"};
     private static final Random rng10 = new Random();
     private int n_tasks;
     private MutableLiveData<List<Integer>> arg1;
@@ -54,9 +54,8 @@ public class TaskGenerator {
                 u.add(i, a);
                 v.add(i, b);
                 w.add(i, op);
-            }
-            else if (op.equals("\u00F7")) {
-                u.add(i, a*b);
+            } else if (op.equals("\u00F7")) {
+                u.add(i, a * b);
                 v.add(i, b);
                 w.add(i, op);
             }
@@ -72,8 +71,7 @@ public class TaskGenerator {
         boolean out = false;
         if ("*".equals(getOperator().getValue().get(i))) {
             out = ((getArg1().getValue().get(i) * getArg2().getValue().get(i)) == result);
-        }
-        else if ("\u00F7".equals(getOperator().getValue().get(i))) {
+        } else if ("\u00F7".equals(getOperator().getValue().get(i))) {
             out = ((getArg1().getValue().get(i) / getArg2().getValue().get(i)) == result);
         }
         getResult().getValue().set(i, out);
