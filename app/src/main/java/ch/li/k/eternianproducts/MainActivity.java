@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
 import ch.li.k.eternianproducts.task.TaskAdapter;
 import ch.li.k.eternianproducts.task.TaskFragment;
-import ch.li.k.eternianproducts.task.TaskGenerator;
+import ch.li.k.eternianproducts.task.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         ///////////
 
 //        final RecyclerView taskList = findViewById(R.id.taskList);
-        final TaskGenerator taskGenerator = new TaskGenerator(nTasks);
-        final TaskAdapter adapter = new TaskAdapter(this, taskGenerator);
+//        final TaskViewModel viewModel = new TaskViewModel(getApplication());
+//        final TaskAdapter adapter = new TaskAdapter(this, viewModel);
 //        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
 
 //        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> {
-            taskGenerator.updateTaskList();
-            adapter.notifyDataSetChanged();
+//            viewModel.generateList();
+//            adapter.notifyDataSetChanged();
 
             LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
             animationBottomBar.removeAllViews();

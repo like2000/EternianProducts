@@ -12,22 +12,33 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.VideoView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.li.k.eternianproducts.BR;
 import ch.li.k.eternianproducts.R;
-import ch.li.k.eternianproducts.databinding.RowTaskListBinding;
+import ch.li.k.eternianproducts.databinding.FragmentTaskBinding;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private Uri videoUri;
     private LayoutInflater inflater;
-    private TaskGenerator taskGenerator;
+    private List<TaskModel> taskList;
     private LinearLayout animationBottomBar;
 
-    public TaskAdapter(Context context, TaskGenerator taskGenerator) {
+    TaskAdapter(Context context) {
+        this.taskList = new ArrayList<>();
         this.inflater = LayoutInflater.from(context);
-        this.taskGenerator = taskGenerator;
-
         this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
         this.animationBottomBar = ((AppCompatActivity) context).findViewById(R.id.animationBottomBar);
+    }
+
+    public List<TaskModel> getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(List<TaskModel> taskList) {
+        this.taskList = taskList;
     }
 
     void play_video() {
@@ -50,23 +61,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.row_task_list, parent, false);
-        return new TaskViewHolder(itemView);
+        return new TaskViewHolder(FragmentTaskBinding.inflate(inflater, parent, false));
     }
 
     @Override // <-- triggered by notifyChanged()
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-//        TaskGenerator task = TaskGenerator.get(position);
+        holder.bind(taskList.get(position));
 
-//        holder.getBinding().setVariable(BR.taskGenerator)
-
-        //        holder.arg1.setText(taskGenerator.getArg1().getValue().get(position).toString());
+//        holder.arg1.setText(taskGenerator.getArg1().getValue().get(position).toString());
 //        holder.arg2.setText(taskGenerator.getArg2().getValue().get(position).toString());
 //        holder.operator.setText(taskGenerator.getOperator().getValue().get(position));
-//
+
 //        holder.result.getText().clear();
 //        holder.result.setBackgroundResource(R.color.silverTrans);
-//
+
 //        holder.result.setOnFocusChangeListener((view, hasFocus) -> {
 //            if (!hasFocus) {
 //                try {
@@ -81,7 +89,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //                }
 //            }
 //        });
-//
+
 //        holder.result.setOnKeyListener((View view, int i, KeyEvent keyEvent) -> {
 //            if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
 //                try {
@@ -112,28 +120,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public int getItemCount() {
-        return taskGenerator.getN_tasks();
+        return this.taskList.size();
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {
-        ViewDataBinding binding;
-//        TextView arg1, arg2;
-//        TextView operator;
-//        EditText result;
+        private final ViewDataBinding binding;
 
-        TaskViewHolder(@NonNull View itemView) {
-            super(itemView);
+        TaskViewHolder(ViewDataBinding binding) {
+            super(binding.getRoot());
 
-            binding = RowTaskListBinding.bind(itemView);
-
-//            arg1 = itemView.findViewById(R.id.arg1);
-//            arg2 = itemView.findViewById(R.id.arg2);
-//            result = itemView.findViewById(R.id.result);
-//            operator = itemView.findViewById(R.id.operator);
+            this.binding = binding;
         }
 
-        public ViewDataBinding getBinding() {
-            return binding;
+        public void bind(TaskModel task) {
+//            binding.setTask(task);
+            binding.setVariable(BR.task, task);
+            binding.executePendingBindings();
         }
     }
 }

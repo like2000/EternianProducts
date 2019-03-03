@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="generator"
-            type="ch.li.k.eternianproducts.task.TaskGenerator" />
+            name="task"
+            type="ch.li.k.eternianproducts.task.TaskModel" />
 
     </data>
 
@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:background="@color/silverTrans"
             android:gravity="center"
-            android:text="@{generator.arg1}"
+            android:text="@{task.arg1}"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:background="@color/silverTrans"
             android:gravity="center"
-            android:text="@{generator.operator}"
+            android:text="@{task.operator}"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -46,7 +46,7 @@
             android:layout_weight="1"
             android:background="@color/silverTrans"
             android:gravity="center"
-            android:text="@{generator.arg2}"
+            android:text="@{task.arg2}"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="20sp"
             android:textStyle="bold" />

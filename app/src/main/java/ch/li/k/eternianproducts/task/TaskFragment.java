@@ -1,12 +1,12 @@
 package ch.li.k.eternianproducts.task;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +22,16 @@ import ch.li.k.eternianproducts.databinding.FragmentTaskBinding;
  */
 public class TaskFragment extends Fragment {
 
-    final int nTasks = 12;
-    final TaskGenerator taskGenerator = new TaskGenerator(nTasks);
-    FragmentTaskBinding binding;
+    TaskAdapter adapter;
+    TaskViewModel viewModel;
     private OnListFragmentInteractionListener interactionListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public TaskFragment() {
-    }
+//    public TaskFragment() {
+//    }
 
 //    // TODO: Customize parameter initialization
 //    @SuppressWarnings("unused")
@@ -43,28 +42,28 @@ public class TaskFragment extends Fragment {
 //        fragment.setArguments(args);
 //        return fragment;
 //    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        binding = FragmentTaskBinding.inflate(inflater, container, false);
-//        View view = inflater.inflate(R.layout.fragment_task_list, container, false);
-//        Context context = view.getContext();
-
-        return binding.getRoot();
+        return FragmentTaskBinding.inflate(inflater, container, false).getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        RecyclerView.Adapter adapter = new TaskAdapter(this.getContext(), taskGenerator);
-        Log.d(this.getTag(), taskGenerator.getArg1().getValue().toString());
-        RecyclerView recyclerView = getActivity().findViewById(R.id.taskList);
+        viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
+        adapter = new TaskAdapter(this.getContext());
 
+        RecyclerView recyclerView = getActivity().findViewById(R.id.taskList);
         recyclerView.setAdapter(adapter);
+
+//        System.out.println("\n\n--> Output:");
+//        Log.d(this.getTag(), adapter.toString());
+//        Log.d(this.getTag(), String.valueOf(viewModel.taskList.getValue().size()));
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+//        viewModel.getTaskList().observe(this, (taskModels -> adapter.setTaskList(taskModels)));
+//        System.exit(-1);
 
 //        // Set the adapter
 //        if (view instanceof RecyclerView) {

@@ -5,6 +5,8 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class TaskViewModel extends AndroidViewModel {
@@ -17,17 +19,18 @@ public class TaskViewModel extends AndroidViewModel {
     //    private static final String[] ops = {"*", "\u00F7"};
     //    private static final String[] ops = {"*", "*"};
     private static final Random rng10 = new Random();
-    MutableLiveData<TaskModel> taskList = new MutableLiveData<>();
+    MutableLiveData<List<TaskModel>> taskList = new MutableLiveData<>();
 
-    public TaskViewModel(@NonNull Application application) {
+    TaskViewModel(@NonNull Application application) {
         super(application);
 
         generateList();
     }
 
-    private void generateList() {
+    void generateList() {
         int a, b;
         String op;
+        List<TaskModel> list = new ArrayList<>();
 
         for (int i = 0; i < nTasks; i++) {
             a = rng10.nextInt(bound10) + 1;
@@ -35,10 +38,22 @@ public class TaskViewModel extends AndroidViewModel {
             op = ops[rng2.nextInt(bound2)];
 
             if (op.equals("*")) {
-                taskList.setValue(new TaskModel(a, b, op));
+                list.add(new TaskModel(a, b, op));
             } else if (op.equals("\u00F7")) {
-                taskList.setValue(new TaskModel(a * b, b, op));
+                list.add(new TaskModel(a * b, b, op));
+            }
+            else {
+                list.add(new TaskModel(a, b, op));
             }
         }
+        taskList.setValue(list);
+    }
+
+    public MutableLiveData<List<TaskModel>> getTaskList() {
+        return taskList;
+    }
+
+    public void setTaskList(MutableLiveData<List<TaskModel>> taskList) {
+        this.taskList = taskList;
     }
 }
