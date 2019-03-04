@@ -27,7 +27,7 @@ public class TaskViewModel extends AndroidViewModel {
         generateList();
     }
 
-    void generateList() {
+    private void generateList() {
         int a, b;
         String op;
         List<TaskModel> list = new ArrayList<>();

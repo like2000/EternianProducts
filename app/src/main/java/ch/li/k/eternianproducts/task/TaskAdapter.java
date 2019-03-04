@@ -66,13 +66,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(FragmentTaskItemBinding.inflate(inflater, parent, false));
     }
 
-    @Override // <-- triggered by notifyChanged()
+    @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         holder.bind(taskList.get(position));
 
-//        holder.arg1.setText(taskGenerator.getArg1().getValue().get(position).toString());
-//        holder.arg2.setText(taskGenerator.getArg2().getValue().get(position).toString());
-//        holder.operator.setText(taskGenerator.getOperator().getValue().get(position));
+//        holder.result.setOnFocusChangeListener((view, hasFocus) -> {
+//            if (!hasFocus) {
+//                try {
+//                    taskGenerator.checkResult(Integer.parseInt(holder.result.getText().toString()), position);
+//                    if (taskGenerator.getResult().getValue().get(position)) {
+//                        holder.result.setBackgroundResource(R.color.greenTrans);
+//                    } else {
+//                        holder.result.setBackgroundResource(R.color.redTrans);
+//                    }
+//                } catch (NumberFormatException exception) {
+//                    holder.result.setBackgroundResource(R.color.silverTrans);
+//                }
+//            }
+//        });
 
 //        holder.result.getText().clear();
 //        holder.result.setBackgroundResource(R.color.silverTrans);
