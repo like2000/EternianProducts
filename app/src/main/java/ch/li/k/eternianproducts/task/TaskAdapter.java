@@ -17,28 +17,30 @@ import java.util.List;
 
 import ch.li.k.eternianproducts.BR;
 import ch.li.k.eternianproducts.R;
-import ch.li.k.eternianproducts.databinding.FragmentTaskBinding;
+import ch.li.k.eternianproducts.databinding.FragmentTaskItemBinding;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private Uri videoUri;
     private LayoutInflater inflater;
-    private List<TaskModel> taskList;
     private LinearLayout animationBottomBar;
+    private List<TaskModel> taskList = new ArrayList<>();
 
     TaskAdapter(Context context) {
-        this.taskList = new ArrayList<>();
+
         this.inflater = LayoutInflater.from(context);
-        this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
         this.animationBottomBar = ((AppCompatActivity) context).findViewById(R.id.animationBottomBar);
+        this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
     }
 
-    public List<TaskModel> getTaskList() {
-        return taskList;
-    }
+//    public List<TaskModel> getTaskList() {
+//        return taskList;
+//    }
 
     public void setTaskList(List<TaskModel> taskList) {
-        this.taskList = taskList;
+        this.taskList.clear();
+        this.taskList.addAll(taskList);
+        notifyDataSetChanged();
     }
 
     void play_video() {
@@ -61,7 +63,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TaskViewHolder(FragmentTaskBinding.inflate(inflater, parent, false));
+        return new TaskViewHolder(FragmentTaskItemBinding.inflate(inflater, parent, false));
     }
 
     @Override // <-- triggered by notifyChanged()
@@ -120,7 +122,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public int getItemCount() {
-        return this.taskList.size();
+        return taskList == null ? 0 : taskList.size();
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {

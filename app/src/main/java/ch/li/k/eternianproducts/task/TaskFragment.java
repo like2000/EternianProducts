@@ -1,6 +1,7 @@
 package ch.li.k.eternianproducts.task;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,18 +23,16 @@ import ch.li.k.eternianproducts.databinding.FragmentTaskBinding;
  */
 public class TaskFragment extends Fragment {
 
-    TaskAdapter adapter;
-    TaskViewModel viewModel;
     private OnListFragmentInteractionListener interactionListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-//    public TaskFragment() {
-//    }
+    public TaskFragment() {
+    }
 
-//    // TODO: Customize parameter initialization
+    //    // TODO: Customize parameter initialization
 //    @SuppressWarnings("unused")
 //    public static TaskFragment newInstance(int columnCount) {
 //        TaskFragment fragment = new TaskFragment();
@@ -45,25 +44,22 @@ public class TaskFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return FragmentTaskBinding.inflate(inflater, container, false).getRoot();
+        FragmentTaskBinding binding = FragmentTaskBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
-        adapter = new TaskAdapter(this.getContext());
-
+        TaskAdapter adapter = new TaskAdapter(getContext());
         RecyclerView recyclerView = getActivity().findViewById(R.id.taskList);
-        recyclerView.setAdapter(adapter);
+        TaskViewModel viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 
-//        System.out.println("\n\n--> Output:");
-//        Log.d(this.getTag(), adapter.toString());
-//        Log.d(this.getTag(), String.valueOf(viewModel.taskList.getValue().size()));
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
-//        viewModel.getTaskList().observe(this, (taskModels -> adapter.setTaskList(taskModels)));
-//        System.exit(-1);
+
+        viewModel.getTaskList().observe(this, adapter::setTaskList);
 
 //        // Set the adapter
 //        if (view instanceof RecyclerView) {
@@ -79,17 +75,39 @@ public class TaskFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
+//    FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener((View view) -> {
+////            viewModel.generateList();
+////            adapter.notifyDataSetChanged();
+//
+//        LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
+//        animationBottomBar.removeAllViews();
+//        LayoutInflater inflaterBottom = LayoutInflater.from(MainActivity.this);
+//        View imageBottom = inflaterBottom.inflate(R.layout.animation_orko, animationBottomBar);
+//
+//        TransitionManager.beginDelayedTransition(animationBottomBar);
+//        imageBottom.setVisibility(View.VISIBLE);
+//        imageBottom.postDelayed(() -> {
+//            TransitionManager.beginDelayedTransition(animationBottomBar);
+//            imageBottom.setVisibility(View.GONE);
+//        }, 1500);
+//
+//        countdown.start();
+////                visible = !visible;
+////                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
+//    });
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
 //        if (context instanceof OnListFragmentInteractionListener) {
 //            interactionListener = (OnListFragmentInteractionListener) context;
 //        } else {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnListFragmentInteractionListener");
 //        }
-//    }
-//
+    }
+
 //    @Override
 //    public void onDetach() {
 //        super.onDetach();

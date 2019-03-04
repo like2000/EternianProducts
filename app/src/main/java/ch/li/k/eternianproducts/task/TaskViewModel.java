@@ -19,7 +19,7 @@ public class TaskViewModel extends AndroidViewModel {
     //    private static final String[] ops = {"*", "\u00F7"};
     //    private static final String[] ops = {"*", "*"};
     private static final Random rng10 = new Random();
-    MutableLiveData<List<TaskModel>> taskList = new MutableLiveData<>();
+    private MutableLiveData<List<TaskModel>> taskList = new MutableLiveData<>();
 
     TaskViewModel(@NonNull Application application) {
         super(application);
@@ -41,8 +41,7 @@ public class TaskViewModel extends AndroidViewModel {
                 list.add(new TaskModel(a, b, op));
             } else if (op.equals("\u00F7")) {
                 list.add(new TaskModel(a * b, b, op));
-            }
-            else {
+            } else {
                 list.add(new TaskModel(a, b, op));
             }
         }

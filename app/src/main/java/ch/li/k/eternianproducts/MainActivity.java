@@ -1,10 +1,8 @@
 package ch.li.k.eternianproducts;
 
-import android.databinding.DataBindingUtil;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,10 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import ch.li.k.eternianproducts.databinding.ActivityMainBinding;
-import ch.li.k.eternianproducts.task.TaskAdapter;
 import ch.li.k.eternianproducts.task.TaskFragment;
-import ch.li.k.eternianproducts.task.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+//        ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
         final float timeout = 3 * 60 * 1000;
         final CountDownTimer countdown = new CountDownTimer((long) timeout, 3000) {
@@ -92,28 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener((View view) -> {
-//            viewModel.generateList();
-//            adapter.notifyDataSetChanged();
-
-            LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
-            animationBottomBar.removeAllViews();
-            LayoutInflater inflaterBottom = LayoutInflater.from(MainActivity.this);
-            View imageBottom = inflaterBottom.inflate(R.layout.animation_orko, animationBottomBar);
-
-            TransitionManager.beginDelayedTransition(animationBottomBar);
-            imageBottom.setVisibility(View.VISIBLE);
-            imageBottom.postDelayed(() -> {
-                TransitionManager.beginDelayedTransition(animationBottomBar);
-                imageBottom.setVisibility(View.GONE);
-            }, 1500);
-
-            countdown.start();
-//                visible = !visible;
-//                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
-        });
     }
 
     @Override
