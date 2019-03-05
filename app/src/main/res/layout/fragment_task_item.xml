@@ -61,7 +61,7 @@
             android:layout_weight="2"
             android:height="48dp"
             android:autofillHints=""
-            android:background="@{task.check ? @color/greenTrans : @color/greenTrans}"
+            android:background="@{task.color}"
             android:ems="10"
             android:gravity="center"
             android:hint="@string/edit_text_ph"

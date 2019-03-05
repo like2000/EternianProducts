@@ -1,11 +1,12 @@
 package ch.li.k.eternianproducts.task;
 
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
-import ch.li.k.eternianproducts.R;
-
 public class TaskModel {
+    private final ColorDrawable redTrans = new ColorDrawable(0xa0ff0000);
+    private final ColorDrawable greenTrans = new ColorDrawable(0xa0228B22);
+    private final ColorDrawable silverTrans = new ColorDrawable(0xA0C0C0C0);
+
     private int arg1;
     private int arg2;
     private int result;
@@ -17,6 +18,7 @@ public class TaskModel {
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.operator = operator;
+        this.color = silverTrans;
     }
 
     public void checkResult(int result) {
@@ -27,8 +29,11 @@ public class TaskModel {
             out = arg1 / arg2 == result;
         }
         check = out;
-//        color = new ColorDrawable(getResources().getColor(R.color.silverTrans));
-//        color = getC.getResources().getColor(data.colorRes);
+        if (out) {
+            color = greenTrans;
+        } else {
+            color = redTrans;
+        }
     }
 
     public int getArg1() {
