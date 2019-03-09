@@ -64,7 +64,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         this.recyclerView = recyclerView;
     }
@@ -82,19 +82,29 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_TAB)) {
+                        (keyCode == KeyEvent.KEYCODE_ENTER ||
+                                keyCode == KeyEvent.KEYCODE_TAB ||
+                                keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+                                keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+                                keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+                                keyCode == KeyEvent.KEYCODE_DPAD_LEFT)) {
                     try {
                         String result = holder.resultField.getText().toString();
                         taskList.get(holder.getAdapterPosition()).checkResult(Integer.parseInt(result));
 
-                        notifyItemChanged(position);
+                        notifyItemChanged(holder.getAdapterPosition());
                     } catch (NumberFormatException exception) {
                         Log.d(TAG, exception.getMessage());
                     }
 
                     try {
-                        EditText editText = recyclerView.getChildAt(position + 1).findViewById(R.id.result);
-                        editText.requestFocus();
+                        if (keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                            EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() + 1).findViewById(R.id.result);
+                            editText.requestFocus();
+                        } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                            EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() - 1).findViewById(R.id.result);
+                            editText.requestFocus();
+                        }
                     } catch (NullPointerException exception) {
                         EditText editText = recyclerView.getChildAt(0).findViewById(R.id.result);
                         editText.requestFocus();
@@ -124,6 +134,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             holder.resultField.getText().clear();
         }
 
+//        if (taskList.stream().allMatch((Boolean result) -> {
+//            return result;
+//        })) {
+////                allMatch((Boolean result) -> result)) {
+//            System.out.println("Done!");
+//        }
+
 //        holder.resultField.setOnFocusChangeListener(
 //                (view, hasFocus) -> {
 //                    try {
@@ -134,19 +151,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 //                    if (recyclerView != null && !recyclerView.isComputingLayout()) {
 //                        notifyDataSetChanged();
 //                    }
-
-
-//                    recyclerView.post(new Runnable()
-//                    {
-//                        @Override
-//                        public void run() {
-//                            notifyDataSetChanged();
-//                        }
-//                    });
-//                    System.out.println(task.getResult() + " " + holder.resultField.getText().toString());
-//                    System.out.println(task.getColor().getColor() + " " + ((ColorDrawable) holder.resultField.getBackground()).getColor());
-//                }
-//        );
 
 //        holder.result.setOnKeyListener((View view, int i, KeyEvent keyEvent) -> {
 //            if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
