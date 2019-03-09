@@ -3,14 +3,13 @@ package ch.li.k.eternianproducts.task;
 import android.graphics.drawable.ColorDrawable;
 
 public class TaskModel {
-    private final ColorDrawable redTrans = new ColorDrawable(0xa0ff0000);
-    private final ColorDrawable greenTrans = new ColorDrawable(0xa0228B22);
-    private final ColorDrawable silverTrans = new ColorDrawable(0xA0C0C0C0);
+    private static final ColorDrawable redTrans = new ColorDrawable(0xa0ff0000);
+    private static final ColorDrawable greenTrans = new ColorDrawable(0xa0228B22);
+    private static final ColorDrawable silverTrans = new ColorDrawable(0xA0C0C0C0);
 
     private int arg1;
     private int arg2;
     private int result;
-    private boolean check;
     private String operator;
     private ColorDrawable color;
 
@@ -21,18 +20,20 @@ public class TaskModel {
         this.color = silverTrans;
     }
 
-    public void checkResult(int result) {
+    void checkResult(int result) {
         boolean out = false;
         if ("*".equals(operator)) {
             out = arg1 * arg2 == result;
         } else if ("\u00F7".equals(operator)) {
             out = arg1 / arg2 == result;
+        } else if ("+".equals(operator)) {
+            out = arg1 + arg2 == result;
         }
-        check = out;
+
         if (out) {
-            color = greenTrans;
+            setColor(greenTrans);
         } else {
-            color = redTrans;
+            setColor(redTrans);
         }
     }
 
@@ -52,28 +53,24 @@ public class TaskModel {
         this.arg2 = arg2;
     }
 
-    public int getResult() {
-        return result;
+    public String getResult() {
+        return String.valueOf(result);
     }
 
-    public void setResult(int result) {
-        this.result = result;
+    public void setResult(String result) {
+        try {
+            this.result = Integer.parseInt(result);
+        } catch (NumberFormatException exception) {
+        }
+        System.out.println(result);
     }
 
     public ColorDrawable getColor() {
         return color;
     }
 
-    public void setColor(ColorDrawable color) {
+    private void setColor(ColorDrawable color) {
         this.color = color;
-    }
-
-    public boolean isCheck() {
-        return check;
-    }
-
-    public void setCheck(boolean check) {
-        this.check = check;
     }
 
     public String getOperator() {

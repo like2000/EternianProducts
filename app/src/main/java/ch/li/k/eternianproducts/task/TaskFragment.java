@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import ch.li.k.eternianproducts.R;
 import ch.li.k.eternianproducts.databinding.FragmentTaskBinding;
@@ -58,8 +59,19 @@ public class TaskFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+//        recyclerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                adapter.checkResult();
+//            }
+//        });
 
         viewModel.getTaskList().observe(this, adapter::setTaskList);
+//        adapter.on
+//        EditText resultField = this.getActivity().findViewById(R.id.result);
+//        resultField.setOnFocusChangeListener((result, hasFocus) -> {
+//            adapter.checkResult(resultField, hasFocus);
+//        });
 
 //        // Set the adapter
 //        if (view instanceof RecyclerView) {

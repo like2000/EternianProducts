@@ -66,6 +66,7 @@
             android:gravity="center"
             android:hint="@string/edit_text_ph"
             android:inputType="phone"
+            android:text="@={task.result}"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="20sp"
             android:textStyle="bold" />

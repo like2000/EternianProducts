@@ -19,6 +19,7 @@ public class TaskViewModel extends AndroidViewModel {
     //    private static final String[] ops = {"*", "\u00F7"};
     //    private static final String[] ops = {"*", "*"};
     private static final Random rng10 = new Random();
+
     private MutableLiveData<List<TaskModel>> taskList = new MutableLiveData<>();
 
     TaskViewModel(@NonNull Application application) {
@@ -47,6 +48,11 @@ public class TaskViewModel extends AndroidViewModel {
         }
         taskList.setValue(list);
     }
+
+//    public void updateColors(int position) {
+//        List<TaskModel> list = taskList.getValue();
+//        list.get(position).getColor();
+//    }
 
     public MutableLiveData<List<TaskModel>> getTaskList() {
         return taskList;
