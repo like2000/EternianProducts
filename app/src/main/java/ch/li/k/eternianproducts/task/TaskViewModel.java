@@ -3,11 +3,14 @@ package ch.li.k.eternianproducts.task;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class TaskViewModel extends AndroidViewModel {
 
@@ -20,6 +23,7 @@ public class TaskViewModel extends AndroidViewModel {
     //    private static final String[] ops = {"*", "*"};
     private static final Random rng10 = new Random();
 
+    private List<MutableLiveData<Boolean>> checkList = new ArrayList<>();
     private MutableLiveData<List<TaskModel>> taskList = new MutableLiveData<>();
 
     TaskViewModel(@NonNull Application application) {
@@ -54,11 +58,11 @@ public class TaskViewModel extends AndroidViewModel {
 //        list.get(position).getColor();
 //    }
 
+//    public MutableLiveData<List<MutableLiveData<Boolean>>> getCheckList() {
+//        return checkList;
+//    }
+
     public MutableLiveData<List<TaskModel>> getTaskList() {
         return taskList;
-    }
-
-    public void setTaskList(MutableLiveData<List<TaskModel>> taskList) {
-        this.taskList = taskList;
     }
 }

@@ -2,9 +2,7 @@ package ch.li.k.eternianproducts.task;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.VideoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,41 +22,20 @@ import static android.content.ContentValues.TAG;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
-    private Uri videoUri;
     private boolean isVirign;
     private LayoutInflater inflater;
     private RecyclerView recyclerView;
-    private LinearLayout animationBottomBar;
     private List<TaskModel> taskList = new ArrayList<>();
 
     TaskAdapter(Context context) {
         this.isVirign = true;
         this.inflater = LayoutInflater.from(context);
-        this.animationBottomBar = ((AppCompatActivity) context).findViewById(R.id.animationBottomBar);
-        this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
     }
 
     public void setTaskList(List<TaskModel> taskList) {
         this.taskList.clear();
         this.taskList.addAll(taskList);
         notifyDataSetChanged();
-    }
-
-    void play_video() {
-        animationBottomBar.removeAllViews();
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.animation_heman, this.animationBottomBar);
-        layout.setVisibility(View.VISIBLE);
-
-        VideoView video = layout.findViewById(R.id.video_heman);
-        video.setVideoURI(this.videoUri);
-        System.out.println("Start video!!");
-        video.start();
-
-        video.setOnCompletionListener((v) -> {
-            System.out.println("Finish video!");
-            video.stopPlayback();
-            video.seekTo(0);
-        });
     }
 
     @Override
@@ -85,9 +60,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                         (keyCode == KeyEvent.KEYCODE_ENTER ||
                                 keyCode == KeyEvent.KEYCODE_TAB ||
                                 keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
-                                keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
-                                keyCode == KeyEvent.KEYCODE_DPAD_UP ||
-                                keyCode == KeyEvent.KEYCODE_DPAD_LEFT)) {
+                                keyCode == KeyEvent.KEYCODE_DPAD_UP)) {
                     try {
                         String result = holder.resultField.getText().toString();
                         taskList.get(holder.getAdapterPosition()).checkResult(Integer.parseInt(result));
@@ -98,10 +71,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     }
 
                     try {
-                        if (keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                        if (keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                             EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() + 1).findViewById(R.id.result);
                             editText.requestFocus();
-                        } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                        } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                             EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() - 1).findViewById(R.id.result);
                             editText.requestFocus();
                         }
@@ -109,17 +82,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                         EditText editText = recyclerView.getChildAt(0).findViewById(R.id.result);
                         editText.requestFocus();
                     }
-
-//                try {
-//                    if (taskGenerator.getResult().getValue().stream().allMatch((Boolean result) -> result)) {
-//                        play_video();
-//                        System.out.println("Done!");
-//                    }
-//                } catch (NullPointerException exception) {
-////                    play_video();
-//                    System.out.println("Not yet done!");
-//                }
-
                     isVirign = false;
                     return true;
                 }
@@ -133,13 +95,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         if (isVirign) {
             holder.resultField.getText().clear();
         }
-
-//        if (taskList.stream().allMatch((Boolean result) -> {
-//            return result;
-//        })) {
-////                allMatch((Boolean result) -> result)) {
-//            System.out.println("Done!");
-//        }
 
 //        holder.resultField.setOnFocusChangeListener(
 //                (view, hasFocus) -> {

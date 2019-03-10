@@ -10,6 +10,10 @@
             name="task"
             type="ch.li.k.eternianproducts.task.TaskModel" />
 
+        <variable
+            name="taskViewModel"
+            type="ch.li.k.eternianproducts.task.TaskViewModel" />
+
     </data>
 
     <LinearLayout

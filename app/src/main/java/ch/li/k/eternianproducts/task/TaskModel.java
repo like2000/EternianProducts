@@ -1,5 +1,6 @@
 package ch.li.k.eternianproducts.task;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.ColorDrawable;
 
 public class TaskModel {
@@ -13,11 +14,14 @@ public class TaskModel {
     private String operator;
     private ColorDrawable color;
 
+    private final MutableLiveData<Boolean> check = new MutableLiveData<>();
+
     TaskModel(int arg1, int arg2, String operator) {
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.operator = operator;
         this.color = silverTrans;
+        this.check.setValue(false);
     }
 
     void checkResult(int result) {
@@ -32,8 +36,10 @@ public class TaskModel {
 
         if (out) {
             setColor(greenTrans);
+            setCheck(true);
         } else {
             setColor(redTrans);
+            setCheck(false);
         }
     }
 
@@ -62,7 +68,6 @@ public class TaskModel {
             this.result = Integer.parseInt(result);
         } catch (NumberFormatException exception) {
         }
-        System.out.println(result);
     }
 
     public ColorDrawable getColor() {
@@ -79,5 +84,13 @@ public class TaskModel {
 
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    MutableLiveData<Boolean> getCheck() {
+        return check;
+    }
+
+    private void setCheck(Boolean check) {
+        this.check.setValue(check);
     }
 }
