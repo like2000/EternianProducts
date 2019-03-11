@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class TaskViewModel extends AndroidViewModel {
 
-    private static final int nTasks = 12;
+    private static final int nTasks = 4;
     private static final int bound2 = 2;
     private static final int bound10 = 12;
     private static final String[] ops = {"+", "+"};

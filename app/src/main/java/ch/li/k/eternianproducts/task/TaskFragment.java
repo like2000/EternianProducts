@@ -89,6 +89,7 @@ public class TaskFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         FragmentTaskBinding binding = FragmentTaskBinding.inflate(inflater, container, false);
+        animationBottomBar = binding.animationBottomBar;
         return binding.getRoot();
     }
 
@@ -164,7 +165,6 @@ public class TaskFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.inflater = LayoutInflater.from(context);
-        this.animationBottomBar = ((AppCompatActivity) context).findViewById(R.id.animationBottomBar);
         this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
     }
 //        if (context instanceof OnListFragmentInteractionListener) {
