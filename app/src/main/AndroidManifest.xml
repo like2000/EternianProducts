@@ -26,5 +26,4 @@
 
 </manifest>
 
-    <!--|stateVisible||stateHidden-->
-    <!--<fragment android:name=".TaskFragment" />-->
+    <!--|stateVisible||stateHidden--><!--<fragment android:name=".TaskFragment" />-->

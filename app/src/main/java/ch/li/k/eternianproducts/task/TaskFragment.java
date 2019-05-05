@@ -97,22 +97,29 @@ public class TaskFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Adapters etc.
         TaskAdapter adapter = new TaskAdapter(getContext());
         RecyclerView recyclerView = getActivity().findViewById(R.id.taskList);
         TaskViewModel viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 
+        // Layout manager
+        GridLayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2) {
+            @Override
+            public boolean supportsPredictiveItemAnimations() {
+                return true;
+            }
+        };
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+        recyclerView.getLayoutManager().setAutoMeasureEnabled(true);
 
         viewModel.getTaskList().observe(this, adapter::setTaskList);
         List<TaskModel> taskList = viewModel.getTaskList().getValue();
-        taskList.forEach(task -> task.getCheck().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                Boolean allCorrect = taskList.stream().allMatch(taskModel -> taskModel.getCheck().getValue());
-                if (allCorrect) {
-                    play_video();
-                }
+        taskList.forEach(task -> task.getCheck().observe(this, hasChanged -> {
+            boolean allCorrect = taskList.stream().allMatch(taskModel -> taskModel.getCheck().getValue());
+            if (allCorrect) {
+                play_video();
             }
         }));
 

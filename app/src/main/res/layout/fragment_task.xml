@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="java.lang.String" />
-
         <variable
             name="taskViewModel"
             type="ch.li.k.eternianproducts.task.TaskViewModel" />
@@ -24,19 +22,18 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/taskList"
             android:layout_width="0dp"
             android:layout_height="300dp"
             android:layout_marginTop="8dp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/animationTopBar">
-
-        </android.support.v7.widget.RecyclerView>
+            app:layout_constraintTop_toBottomOf="@+id/animationTopBar" />
 
         <LinearLayout
             android:id="@+id/animationBottomBar"
@@ -46,7 +43,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/taskList"></LinearLayout>
+            app:layout_constraintTop_toTopOf="@+id/taskList" />
 
     </android.support.constraint.ConstraintLayout>
 

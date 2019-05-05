@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="java.lang.String" />
-
         <variable
             name="task"
             type="ch.li.k.eternianproducts.task.TaskModel" />
@@ -16,6 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/silverTrans"
+        android:gravity="center"
+        android:visibility="visible"
         tools:context=".task.TaskFragment">
 
         <TextView

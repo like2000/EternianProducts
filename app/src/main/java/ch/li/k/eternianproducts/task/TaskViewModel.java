@@ -3,23 +3,20 @@ package ch.li.k.eternianproducts.task;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class TaskViewModel extends AndroidViewModel {
 
-    private static final int nTasks = 4;
+    private static final int nTasks = 12;
     private static final int bound2 = 2;
     private static final int bound10 = 12;
-    private static final String[] ops = {"+", "+"};
+    //    private static final String[] ops = {"+", "+"};
     private static final Random rng2 = new Random();
-    //    private static final String[] ops = {"*", "\u00F7"};
+    private static final String[] ops = {"*", "\u00F7"};
     //    private static final String[] ops = {"*", "*"};
     private static final Random rng10 = new Random();
 
