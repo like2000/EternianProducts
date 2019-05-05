@@ -17,6 +17,7 @@ import ch.li.k.eternianproducts.task.TaskFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int bound10 = 12;
     private final int nTasks = 12;
 
     @Override
@@ -65,12 +66,11 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.fragmentContainer, new TaskFragment());
         transaction.addToBackStack(null);
         transaction.commit();
-        ///////////
 
-//        final RecyclerView taskList = findViewById(R.id.taskList);
-//        final TaskViewModel viewModel = new TaskViewModel(getApplication());
-//        final TaskAdapter adapter = new TaskAdapter(this, viewModel);
-//        final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 2);
+        // Toolbar
+        //////////
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 //        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
 //        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
@@ -80,13 +80,6 @@ public class MainActivity extends AppCompatActivity {
 //        ProgressBar progress = findViewById(R.id.progressBar);
 //        progress.setProgressDrawable(getResources().getDrawable(R.drawable.orko));
 //        progress.setProgress(80);
-//        final TableLayout tableLayout = findViewById(R.id.taskTable);
-//        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-//        TableRow row = (TableRow) inflater.inflate(R.layout.view_task_row, tableLayout, false);
-//        tableLayout.addView(row);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -106,11 +99,9 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
-        else if (id == R.id.action_user) {
+        } else if (id == R.id.action_user) {
             return true;
-        }
-        else if (id == R.id.action_search) {
+        } else if (id == R.id.action_search) {
             return true;
         }
 
