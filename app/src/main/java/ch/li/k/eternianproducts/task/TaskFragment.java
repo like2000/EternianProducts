@@ -54,7 +54,10 @@ public class TaskFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public TaskFragment() {
+    public static TaskFragment newInstance() {
+        TaskFragment fragment = new TaskFragment();
+
+        return fragment;
     }
 
     void play_video() {
@@ -102,16 +105,8 @@ public class TaskFragment extends Fragment {
         RecyclerView recyclerView = getActivity().findViewById(R.id.taskList);
         TaskViewModel viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 
-        // Layout manager
-        GridLayoutManager layoutManager = new GridLayoutManager(this.getContext(), 2) {
-            @Override
-            public boolean supportsPredictiveItemAnimations() {
-                return true;
-            }
-        };
-
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 3));
         recyclerView.getLayoutManager().setAutoMeasureEnabled(true);
 
         viewModel.getTaskList().observe(this, adapter::setTaskList);

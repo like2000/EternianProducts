@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -60,17 +61,19 @@ public class MainActivity extends AppCompatActivity {
         };
         countdown.start();
 
-        // Fragment
-        ///////////
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, new TaskFragment());
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-        // Toolbar
-        //////////
+        // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("He-Nius");
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Inflate fragment
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragmentContainer, new TaskFragment())
+                .addToBackStack(null)
+                .commit();
 
 //        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
 //        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
@@ -98,7 +101,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, new SettingsFragment())
+                    .commit();
         } else if (id == R.id.action_user) {
             return true;
         } else if (id == R.id.action_search) {

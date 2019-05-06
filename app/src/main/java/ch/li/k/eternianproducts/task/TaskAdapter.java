@@ -138,6 +138,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
             this.binding = binding;
             this.resultField = binding.getRoot().findViewById(R.id.result);
+            this.resultField.requestLayout();
         }
 
         public void bind(TaskModel task) {
