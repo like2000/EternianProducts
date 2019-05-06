@@ -8,7 +8,7 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_user"
+        android:id="@+id/action_update"
         android:icon="@android:drawable/ic_popup_sync"
         android:orderInCategory="101"
         android:title="User"

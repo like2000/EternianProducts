@@ -3,9 +3,7 @@ package ch.li.k.eternianproducts;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -20,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int bound10 = 12;
     private final int nTasks = 12;
+    private CountDownTimer countdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 //        ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
         final float timeout = 3 * 60 * 1000;
-        final CountDownTimer countdown = new CountDownTimer((long) timeout, 3000) {
+        countdown = new CountDownTimer((long) timeout, 3000) {
             @Override
             public void onTick(long l) {
                 LinearLayout animationTopBar = findViewById(R.id.animationTopBar);
@@ -105,12 +104,28 @@ public class MainActivity extends AppCompatActivity {
                     .beginTransaction()
                     .replace(R.id.fragmentContainer, new SettingsFragment())
                     .commit();
-        } else if (id == R.id.action_user) {
-            return true;
+        } else if (id == R.id.action_update) {
+            TaskFragment fragment = (TaskFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+            fragment.reinit();
+
+            LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
+            animationBottomBar.removeAllViews();
+            View imageBottom = LayoutInflater.from(MainActivity.this)
+                    .inflate(R.layout.animation_orko, animationBottomBar);
+
+            TransitionManager.beginDelayedTransition(animationBottomBar);
+            imageBottom.setVisibility(View.VISIBLE);
+            imageBottom.postDelayed(() -> {
+                TransitionManager.beginDelayedTransition(animationBottomBar);
+                imageBottom.setVisibility(View.GONE);
+            }, 2000);
+
+            countdown.start();
+//                visible = !visible;
+//                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
         } else if (id == R.id.action_search) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

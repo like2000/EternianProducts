@@ -29,7 +29,7 @@ public class TaskViewModel extends AndroidViewModel {
         generateList();
     }
 
-    private void generateList() {
+    public void generateList() {
         int a, b;
         String op;
         List<TaskModel> list = new ArrayList<>();

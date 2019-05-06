@@ -1,6 +1,5 @@
 package ch.li.k.eternianproducts.task;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
@@ -8,7 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,7 +45,10 @@ import ch.li.k.eternianproducts.databinding.FragmentTaskBinding;
 public class TaskFragment extends Fragment {
 
     private Uri videoUri;
+    private TaskAdapter adapter;
     private LayoutInflater inflater;
+    private TaskViewModel viewModel;
+    private RecyclerView recyclerView;
     private LinearLayout animationBottomBar;
 //    private OnListFragmentInteractionListener interactionListener;
 
@@ -54,10 +56,11 @@ public class TaskFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public static TaskFragment newInstance() {
-        TaskFragment fragment = new TaskFragment();
+    public TaskFragment() {
+    }
 
-        return fragment;
+    public void reinit() {
+        viewModel.generateList();
     }
 
     void play_video() {
@@ -101,11 +104,13 @@ public class TaskFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // Adapters etc.
-        TaskAdapter adapter = new TaskAdapter(getContext());
-        RecyclerView recyclerView = getActivity().findViewById(R.id.taskList);
-        TaskViewModel viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
+        adapter = new TaskAdapter(getContext());
+        recyclerView = getActivity().findViewById(R.id.taskList);
+        viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 
         recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 3));
         recyclerView.getLayoutManager().setAutoMeasureEnabled(true);
 
