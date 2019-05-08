@@ -53,48 +53,45 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
 
-        holder.resultField.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER ||
-                                keyCode == KeyEvent.KEYCODE_TAB ||
-                                keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
-                                keyCode == KeyEvent.KEYCODE_DPAD_UP)) {
-                    try {
-                        String result = holder.resultField.getText().toString();
-                        taskList.get(holder.getAdapterPosition()).checkResult(Integer.parseInt(result));
-
-                        notifyItemChanged(holder.getAdapterPosition());
-                    } catch (NumberFormatException exception) {
-                        Log.d(TAG, exception.getMessage());
-                    }
-
-                    try {
-                        if (keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-                            EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() + 1).findViewById(R.id.result);
-                            editText.requestFocus();
-                        } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                            EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() - 1).findViewById(R.id.result);
-                            editText.requestFocus();
-                        }
-                    } catch (NullPointerException exception) {
-                        EditText editText = recyclerView.getChildAt(0).findViewById(R.id.result);
-                        editText.requestFocus();
-                    }
-                    isVirign = false;
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        TaskModel task = taskList.get(position);
-        holder.bind(task);
+//        holder.resultField.setOnKeyListener((view, keyCode, keyEvent) -> {
+//            if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+//                    (keyCode == KeyEvent.KEYCODE_ENTER ||
+//                            keyCode == KeyEvent.KEYCODE_TAB ||
+//                            keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+//                            keyCode == KeyEvent.KEYCODE_DPAD_UP)) {
+//                try {
+//                    String result = holder.resultField.getText().toString();
+//                    taskList.get(holder.getAdapterPosition()).checkResult(Integer.parseInt(result));
+//
+//                    notifyItemChanged(holder.getAdapterPosition());
+//                } catch (NumberFormatException exception) {
+//                    Log.d(TAG, exception.getMessage());
+//                }
+//
+//                try {
+//                    if (keyCode == KeyEvent.KEYCODE_TAB || keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+//                        EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() + 1).findViewById(R.id.result);
+//                        editText.requestFocus();
+//                    } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+//                        EditText editText = recyclerView.getChildAt(holder.getAdapterPosition() - 1).findViewById(R.id.result);
+//                        editText.requestFocus();
+//                    }
+//                } catch (NullPointerException exception) {
+//                    EditText editText = recyclerView.getChildAt(0).findViewById(R.id.result);
+//                    editText.requestFocus();
+//                }
+//                isVirign = false;
+//                return true;
+//            }
+//            return false;
+//        });
 
         if (isVirign) {
             holder.resultField.getText().clear();
         }
+
+        holder.bind(taskList.get(position));
+
 
 //        holder.resultField.setOnFocusChangeListener(
 //                (view, hasFocus) -> {
@@ -133,7 +130,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private final ViewDataBinding binding;
         private final EditText resultField;
 
-        TaskViewHolder(ViewDataBinding binding) {
+        TaskViewHolder(@NonNull ViewDataBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;

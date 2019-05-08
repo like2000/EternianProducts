@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class TaskViewModel extends AndroidViewModel {
 
-    private static final int nTasks = 12;
+    private static final int nTasks = 2;
     private static final int bound2 = 2;
     private static final int bound10 = 12;
     //    private static final String[] ops = {"+", "+"};
@@ -29,7 +29,7 @@ public class TaskViewModel extends AndroidViewModel {
         generateList();
     }
 
-    public void generateList() {
+    void generateList() {
         int a, b;
         String op;
         List<TaskModel> list = new ArrayList<>();
@@ -51,7 +51,7 @@ public class TaskViewModel extends AndroidViewModel {
     }
 
 //    public void updateColors(int position) {
-//        List<TaskModel> list = taskList.getValue();
+//        List<TestModel> list = taskList.getValue();
 //        list.get(position).getColor();
 //    }
 

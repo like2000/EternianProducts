@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -12,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:background="@color/silverTrans"
         android:gravity="center"
         android:visibility="visible">
@@ -22,7 +21,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/silverTrans"
             android:gravity="center"
             android:text="@{String.valueOf(task.arg1)}"
             android:textColor="@android:color/holo_orange_light"
@@ -34,7 +32,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/silverTrans"
             android:gravity="center"
             android:text="@{task.operator}"
             android:textColor="@android:color/holo_orange_light"
@@ -46,7 +43,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/silverTrans"
             android:gravity="center"
             android:text="@{String.valueOf(task.arg2)}"
             android:textColor="@android:color/holo_orange_light"
@@ -63,7 +59,7 @@
             android:background="@{task.color}"
             android:gravity="center"
             android:hint="@string/edit_text_ph"
-            android:inputType="phone"
+            android:inputType="number"
             android:nextFocusForward="@+id/result"
             android:text="@={task.result}"
             android:textColor="@android:color/holo_orange_light"

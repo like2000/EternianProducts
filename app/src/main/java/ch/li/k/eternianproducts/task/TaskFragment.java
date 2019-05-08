@@ -111,7 +111,8 @@ public class TaskFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 3));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
         recyclerView.getLayoutManager().setAutoMeasureEnabled(true);
 
         viewModel.getTaskList().observe(this, adapter::setTaskList);
@@ -122,6 +123,7 @@ public class TaskFragment extends Fragment {
                 play_video();
             }
         }));
+
 
 //        viewModel.getTaskList().getValue().get(0).getCheck().observe(this, new Observer<Boolean>() {
 //            @Override
@@ -143,7 +145,7 @@ public class TaskFragment extends Fragment {
 //            }
 //            recyclerView.setAdapter(new MyTaskRecyclerViewAdapter(DummyContent.ITEMS, interactionListener));
 //        }
-
+//
     }
 
 //    FloatingActionButton fab = findViewById(R.id.fab);
@@ -174,12 +176,6 @@ public class TaskFragment extends Fragment {
         this.inflater = LayoutInflater.from(context);
         this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
     }
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            interactionListener = (OnListFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
 
     @Override
     public void onDetach() {

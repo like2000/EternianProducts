@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import ch.li.k.eternianproducts.task.TaskFragment;
+import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.fragmentContainer, new TaskFragment())
+                .replace(R.id.fragmentContainer, new TestFragment())
                 .addToBackStack(null)
                 .commit();
 

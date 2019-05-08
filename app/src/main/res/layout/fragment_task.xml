@@ -27,13 +27,13 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/taskList"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="120dp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/animationTopBar" />
+            app:layout_constraintTop_toTopOf="@+id/animationTopBar" />
 
         <LinearLayout
             android:id="@+id/animationBottomBar"
