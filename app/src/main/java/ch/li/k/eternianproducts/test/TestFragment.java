@@ -46,6 +46,7 @@ public class TestFragment extends Fragment {
     }
 
     public void update() {
-        adapter.updateModelList();
+        adapter.testModelList.updateModelList();
+        adapter.notifyDataSetChanged();
     }
 }

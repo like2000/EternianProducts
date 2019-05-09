@@ -5,7 +5,7 @@
 
         <variable
             name="var"
-            type="ch.li.k.eternianproducts.test.TestModel" />
+            type="ch.li.k.eternianproducts.test.TestModelList.TestModel" />
 
     </data>
 

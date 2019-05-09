@@ -5,26 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import ch.li.k.eternianproducts.BR;
 import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     private final int N_ELEMENTS = 20;
-    private final ArrayList<TestModel> modelList = new ArrayList<>();
+    TestModelList testModelList;
 
     TestAdapter() {
-        for (int i = 0; i < N_ELEMENTS; i++)
-            modelList.add(new TestModel(1));
-    }
-
-    public void updateModelList() {
-        modelList.clear();
-        for (int i = 0; i < N_ELEMENTS; i++)
-            modelList.add(new TestModel(1));
-        notifyDataSetChanged();
+        testModelList = new TestModelList(N_ELEMENTS);
     }
 
     @Override
@@ -36,7 +26,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(modelList.get(position));
+        holder.bind(testModelList.get(position));
     }
 
     @Override
@@ -53,7 +43,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
             this.binding = binding;
         }
 
-        void bind(TestModel model) {
+        void bind(TestModelList.TestModel model) {
             binding.setVariable(BR.var, model);
             binding.executePendingBindings();
         }
