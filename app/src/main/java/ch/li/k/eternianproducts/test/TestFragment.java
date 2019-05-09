@@ -15,6 +15,9 @@ import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
 public class TestFragment extends Fragment {
 
+    TestAdapter adapter;
+    RecyclerView recyclerView;
+
     public TestFragment() {
     }
 
@@ -30,15 +33,19 @@ public class TestFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerTest);
+        recyclerView = getActivity().findViewById(R.id.recyclerTest);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        TestAdapter adapter = new TestAdapter();
+        adapter = new TestAdapter();
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    public void update() {
+        adapter.updateModelList();
     }
 }

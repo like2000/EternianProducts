@@ -3,6 +3,7 @@ package ch.li.k.eternianproducts;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionManager;
@@ -125,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
 //                visible = !visible;
 //                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
         } else if (id == R.id.action_search) {
-            return true;
+            TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+            fragment.update();
         }
         return super.onOptionsItemSelected(item);
     }

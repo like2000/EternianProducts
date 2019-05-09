@@ -1,44 +1,42 @@
 package ch.li.k.eternianproducts.test;
 
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import ch.li.k.eternianproducts.R;
+import ch.li.k.eternianproducts.BR;
+import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
-    final int N_ELEMENTS = 100;
-    Random random = new Random();
-    ArrayList<Integer> valuesArray1;
-    ArrayList<Integer> valuesArray2;
-    ArrayList<Integer> valuesArray3;
+    private final int N_ELEMENTS = 20;
+    private final ArrayList<TestModel> modelList = new ArrayList<>();
 
-    public TestAdapter() {
-        valuesArray1 = random.ints(N_ELEMENTS).boxed().collect(Collectors.toCollection(ArrayList::new));
-        valuesArray2 = random.ints(N_ELEMENTS).boxed().collect(Collectors.toCollection(ArrayList::new));
-        valuesArray3 = random.ints(N_ELEMENTS).boxed().collect(Collectors.toCollection(ArrayList::new));
+    TestAdapter() {
+        for (int i = 0; i < N_ELEMENTS; i++)
+            modelList.add(new TestModel(1));
+    }
+
+    public void updateModelList() {
+        modelList.clear();
+        for (int i = 0; i < N_ELEMENTS; i++)
+            modelList.add(new TestModel(1));
+        notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ViewDataBinding binding = FragmentTestItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
-        View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_test_item, null);
-        ViewHolder holder = new ViewHolder(item);
-
-        return holder;
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
+        holder.bind(modelList.get(position));
     }
 
     @Override
@@ -46,9 +44,18 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         return N_ELEMENTS;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
-            super(itemView);
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private final ViewDataBinding binding;
+
+        ViewHolder(ViewDataBinding binding) {
+            super(binding.getRoot());
+
+            this.binding = binding;
+        }
+
+        void bind(TestModel model) {
+            binding.setVariable(BR.var, model);
+            binding.executePendingBindings();
         }
     }
 }
