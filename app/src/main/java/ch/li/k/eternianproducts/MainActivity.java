@@ -3,7 +3,6 @@ package ch.li.k.eternianproducts;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionManager;
@@ -11,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import ch.li.k.eternianproducts.task.TaskFragment;
@@ -19,7 +19,8 @@ import ch.li.k.eternianproducts.test.TestFragment;
 public class MainActivity extends AppCompatActivity {
 
     private static final int bound10 = 12;
-    private final int nTasks = 12;
+    private static final int nTasks = 12;
+    private static final int time = 1;
     private CountDownTimer countdown;
 
     @Override
@@ -27,40 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
-
-        final float timeout = 3 * 60 * 1000;
-        countdown = new CountDownTimer((long) timeout, 3000) {
-            @Override
-            public void onTick(long l) {
-                LinearLayout animationTopBar = findViewById(R.id.animationTopBar);
-                View imageTop = LayoutInflater.from(MainActivity.this)
-                        .inflate(R.layout.animation_skeletor, animationTopBar);
-                imageTop.setAlpha((float) ((timeout - l) / timeout));
-            }
-
-            @Override
-            public void onFinish() {
-                LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
-                animationBottomBar.removeAllViews();
-                View imageBottom = LayoutInflater.from(MainActivity.this)
-                        .inflate(R.layout.animation_game_over, animationBottomBar);
-                imageBottom.setVisibility(View.GONE);
-
-                TransitionManager.beginDelayedTransition(animationBottomBar);
-                imageBottom.postDelayed(() -> {
-                    TransitionManager.beginDelayedTransition(animationBottomBar);
-                    imageBottom.setVisibility(View.VISIBLE);
-                }, 2000);
-
-                MediaPlayer player = MediaPlayer.create(MainActivity.this, R.raw.skeletor_laugh);
-                player.start();
-
-                System.out.println("Game over!");
-                this.cancel();
-//                System.exit(-1);
-            }
-        };
-        countdown.start();
 
         // Set toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -76,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
 
+        startCountdownTimer(time);
 //        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
 //        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
 //        taskList.setLayoutManager(layoutManager);
@@ -130,5 +98,50 @@ public class MainActivity extends AppCompatActivity {
             fragment.update();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startCountdownTimer(int time) {
+        float timeout = time * 60 * 1000;
+
+//        FrameLayout animationBarTop = findViewById(R.id.animationBarTop);
+//        FrameLayout animationBarBottom = findViewById(R.id.animationBarBottom);
+//        View imageTop = LayoutInflater.from(MainActivity.this)
+//                .inflate(R.layout.animation_skeletor, animationBarTop);
+//        View imageBottom = LayoutInflater.from(MainActivity.this)
+//                .inflate(R.layout.animation_game_over, animationBarBottom);
+
+        countdown = new CountDownTimer((long) timeout, 3000) {
+            @Override
+            public void onTick(long l) {
+                // Strangely enough this must be in here...! Cannot go outside
+                FrameLayout animationBarTop = findViewById(R.id.animationBarTop);
+                View imageTop = LayoutInflater.from(MainActivity.this)
+                        .inflate(R.layout.animation_skeletor, animationBarTop);
+                imageTop.setAlpha((float) ((timeout - l) / timeout));
+                System.out.println(l);
+            }
+
+            @Override
+            public void onFinish() {
+                FrameLayout animationBarBottom = findViewById(R.id.animationBarBottom);
+                animationBarBottom.removeAllViews();
+                View imageBottom = LayoutInflater.from(MainActivity.this)
+                        .inflate(R.layout.animation_game_over, animationBarBottom);
+                imageBottom.setVisibility(View.GONE);
+
+                TransitionManager.beginDelayedTransition(animationBarBottom);
+                imageBottom.postDelayed(() -> {
+                    TransitionManager.beginDelayedTransition(animationBarBottom);
+                    imageBottom.setVisibility(View.VISIBLE);
+                }, 2000);
+
+                MediaPlayer player = MediaPlayer.create(MainActivity.this, R.raw.skeletor_laugh);
+                player.start();
+
+                System.out.println("Game over!");
+                this.cancel();
+            }
+        };
+        countdown.start();
     }
 }
