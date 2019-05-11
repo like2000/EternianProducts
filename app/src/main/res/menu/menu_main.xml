@@ -14,9 +14,9 @@
         android:title="User"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:id="@+id/action_preferences"
+        android:icon="@android:drawable/ic_menu_preferences"
         android:orderInCategory="102"
-        android:title="Search"
+        android:title="Preferences"
         app:showAsAction="ifRoom" />
 </menu>

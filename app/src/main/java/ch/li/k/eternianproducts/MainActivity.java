@@ -1,14 +1,14 @@
 package ch.li.k.eternianproducts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 
-import ch.li.k.eternianproducts.settings.SettingsFragment;
+import ch.li.k.eternianproducts.settings.SettingsActivity;
+import ch.li.k.eternianproducts.settings.SettingsDialog;
 import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,11 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int nTasks = 12;
     private static final int time = 1;
 
-    private View imageTop;
-    private View imageBottom;
     private CountDownTimer countdown;
-    private FrameLayout animationBarTop;
-    private FrameLayout animationBarBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         // Toolbar
         // =======
         setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("He-Nius");
 
         // Inflate fragment
         // ================
@@ -63,11 +58,14 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            countdown.cancel();
+
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContainer, new SettingsFragment())
+                    .replace(R.id.fragmentContainer, new SettingsDialog())
                     .commit();
 
+            return true;
         } else if (id == R.id.action_update) {
             TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
             fragment.runAnimationOrko();
@@ -75,12 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
             startCountdownTimer();
 
-        } else if (id == R.id.action_search) {
-            TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-            fragment.update();
+            return true;
+        } else if (id == R.id.action_preferences) {
+            countdown.cancel();
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
-            fragment.runAnimationOrko();
-            startCountdownTimer();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
