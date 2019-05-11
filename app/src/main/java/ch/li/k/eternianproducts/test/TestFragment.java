@@ -1,17 +1,18 @@
 package ch.li.k.eternianproducts.test;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.VideoView;
 
 import ch.li.k.eternianproducts.R;
@@ -19,8 +20,7 @@ import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
 public class TestFragment extends Fragment {
 
-    public ImageView imageTop;
-    public ImageView imageBottom;
+    public View animationContainer;
     public FrameLayout animationBarTop;
     public FrameLayout animationBarBottom;
 
@@ -65,13 +65,30 @@ public class TestFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    void runAnimationHeMan() {
-        FrameLayout animationBottomBar = getActivity().findViewById(R.id.animationBarBottom);
+    public void runAnimationOrko() {
+        animationBarBottom = getActivity().findViewById(R.id.animationBarBottom);
         try {
-            animationBottomBar.removeAllViews();
+            animationBarBottom.removeAllViews();
         } catch (NullPointerException e) {
         }
-        View container = LayoutInflater.from(getContext()).inflate(R.layout.animation_heman, animationBottomBar);
+        View container = LayoutInflater.from(getContext())
+                .inflate(R.layout.animation_orko, animationBarBottom);
+
+        TransitionManager.beginDelayedTransition(animationBarBottom);
+        container.setVisibility(View.VISIBLE);
+        container.postDelayed(() -> {
+            TransitionManager.beginDelayedTransition(animationBarBottom);
+            container.setVisibility(View.GONE);
+        }, 3000);
+    }
+
+    public void runAnimationHeMan() {
+        animationBarBottom = getActivity().findViewById(R.id.animationBarBottom);
+        try {
+            animationBarBottom.removeAllViews();
+        } catch (NullPointerException e) {
+        }
+        View container = LayoutInflater.from(getContext()).inflate(R.layout.animation_heman, animationBarBottom);
         container.setVisibility(View.VISIBLE);
 
         VideoView video = container.findViewById(R.id.video_heman);
@@ -82,5 +99,32 @@ public class TestFragment extends Fragment {
             video.stopPlayback();
             video.seekTo(0);
         });
+    }
+
+    public void runAnimationBeastMan() {
+        animationBarBottom = getActivity().findViewById(R.id.animationBarBottom);
+        try {
+            animationBarBottom.removeAllViews();
+        } catch (NullPointerException e) {
+        }
+        View container = LayoutInflater.from(getContext())
+                .inflate(R.layout.animation_game_over, animationBarBottom);
+        container.setVisibility(View.GONE);
+
+        TransitionManager.beginDelayedTransition(animationBarBottom);
+        container.postDelayed(() -> {
+            TransitionManager.beginDelayedTransition(animationBarBottom);
+            container.setVisibility(View.VISIBLE);
+        }, 3000);
+
+        MediaPlayer player = MediaPlayer.create(getContext(), R.raw.skeletor_laugh);
+        player.start();
+    }
+
+    public void runAnimationSkeletor(long tick, float timeout) {
+        animationBarTop = getActivity().findViewById(R.id.animationBarTop);
+        animationContainer = LayoutInflater.from(getContext())
+                .inflate(R.layout.animation_skeletor, animationBarTop);
+        animationContainer.setAlpha((float) ((timeout - tick) / timeout));
     }
 }
