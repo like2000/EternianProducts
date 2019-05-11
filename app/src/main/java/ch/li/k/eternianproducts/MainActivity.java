@@ -21,7 +21,12 @@ public class MainActivity extends AppCompatActivity {
     private static final int bound10 = 12;
     private static final int nTasks = 12;
     private static final int time = 1;
+
+    private View imageTop;
+    private View imageBottom;
     private CountDownTimer countdown;
+    private FrameLayout animationBarTop;
+    private FrameLayout animationBarBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +34,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
-        // Set toolbar
+        // Toolbar
+        // =======
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("He-Nius");
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        // Top and bottom animationbars
+        // ============================
+//        animationBarTop = findViewById(R.id.animationBarTop);
+//        animationBarBottom = findViewById(R.id.animationBarBottom);
+//        imageTop = LayoutInflater.from(MainActivity.this)
+//                .inflate(R.layout.animation_skeletor, animationBarTop);
+//        imageBottom = LayoutInflater.from(MainActivity.this)
+//                .inflate(R.layout.animation_game_over, animationBarBottom);
+
         // Inflate fragment
+        // ================
         getSupportFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
@@ -43,15 +59,9 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
 
-        startCountdownTimer(time);
-//        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
-//        taskList.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-//        taskList.setLayoutManager(layoutManager);
-//        taskList.setAdapter(adapter);
-
-//        ProgressBar progress = findViewById(R.id.progressBar);
-//        progress.setProgressDrawable(getResources().getDrawable(R.drawable.orko));
-//        progress.setProgress(80);
+        // Countdonw timer
+        // ===============
+        startCountdownTimer();
     }
 
     @Override
@@ -96,52 +106,80 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_search) {
             TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
             fragment.update();
+
+            runAnimationOrko();
+            startCountdownTimer();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void startCountdownTimer(int time) {
+    private void startCountdownTimer() {
         float timeout = time * 60 * 1000;
-
-//        FrameLayout animationBarTop = findViewById(R.id.animationBarTop);
-//        FrameLayout animationBarBottom = findViewById(R.id.animationBarBottom);
-//        View imageTop = LayoutInflater.from(MainActivity.this)
-//                .inflate(R.layout.animation_skeletor, animationBarTop);
-//        View imageBottom = LayoutInflater.from(MainActivity.this)
-//                .inflate(R.layout.animation_game_over, animationBarBottom);
+        try {
+            countdown.cancel();
+        } catch (NullPointerException e) {
+        }
 
         countdown = new CountDownTimer((long) timeout, 3000) {
+
             @Override
-            public void onTick(long l) {
-                // Strangely enough this must be in here...! Cannot go outside
+            public void onTick(long tick) {
                 FrameLayout animationBarTop = findViewById(R.id.animationBarTop);
                 View imageTop = LayoutInflater.from(MainActivity.this)
                         .inflate(R.layout.animation_skeletor, animationBarTop);
-                imageTop.setAlpha((float) ((timeout - l) / timeout));
-                System.out.println(l);
+                imageTop.setAlpha((float) ((timeout - tick) / timeout));
+                System.out.println(tick + ", " + imageTop.getAlpha());
             }
 
             @Override
             public void onFinish() {
-                FrameLayout animationBarBottom = findViewById(R.id.animationBarBottom);
-                animationBarBottom.removeAllViews();
-                View imageBottom = LayoutInflater.from(MainActivity.this)
-                        .inflate(R.layout.animation_game_over, animationBarBottom);
-                imageBottom.setVisibility(View.GONE);
-
-                TransitionManager.beginDelayedTransition(animationBarBottom);
-                imageBottom.postDelayed(() -> {
-                    TransitionManager.beginDelayedTransition(animationBarBottom);
-                    imageBottom.setVisibility(View.VISIBLE);
-                }, 2000);
-
-                MediaPlayer player = MediaPlayer.create(MainActivity.this, R.raw.skeletor_laugh);
-                player.start();
-
-                System.out.println("Game over!");
+                runAnimationBeastMan();
                 this.cancel();
             }
         };
         countdown.start();
+    }
+
+//    void runAnimationSkeletor(long tick) {
+//        // Strangely enough this must be in here...! Cannot go outside
+//        FrameLayout animationBarTop = findViewById(R.id.animationBarTop);
+//        View imageTop = LayoutInflater.from(MainActivity.this)
+//                .inflate(R.layout.animation_skeletor, animationBarTop);
+////        imageTop.setAlpha((float) ((timeout - tick) / timeout));
+//        System.out.println(tick + ", " + imageTop.getAlpha());
+//    }
+
+    void runAnimationBeastMan() {
+        FrameLayout animationBarBottom = findViewById(R.id.animationBarBottom);
+        animationBarBottom.removeAllViews();
+        View imageBottom = LayoutInflater.from(MainActivity.this)
+                .inflate(R.layout.animation_game_over, animationBarBottom);
+        imageBottom.setVisibility(View.GONE);
+
+        TransitionManager.beginDelayedTransition(animationBarBottom);
+        imageBottom.postDelayed(() -> {
+            TransitionManager.beginDelayedTransition(animationBarBottom);
+            imageBottom.setVisibility(View.VISIBLE);
+        }, 2000);
+
+        MediaPlayer player = MediaPlayer.create(MainActivity.this, R.raw.skeletor_laugh);
+        player.start();
+    }
+
+    void runAnimationOrko() {
+        FrameLayout animationBottomBar = findViewById(R.id.animationBarBottom);
+        try {
+            animationBottomBar.removeAllViews();
+        } catch (NullPointerException e) {
+        }
+        View imageBottom = LayoutInflater.from(MainActivity.this)
+                .inflate(R.layout.animation_orko, animationBottomBar);
+
+        TransitionManager.beginDelayedTransition(animationBottomBar);
+        imageBottom.setVisibility(View.VISIBLE);
+        imageBottom.postDelayed(() -> {
+            TransitionManager.beginDelayedTransition(animationBottomBar);
+            imageBottom.setVisibility(View.GONE);
+        }, 3000);
     }
 }

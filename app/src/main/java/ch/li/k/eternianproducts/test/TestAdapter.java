@@ -10,7 +10,7 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
-    private final int N_ELEMENTS = 20;
+    private final int N_ELEMENTS = 14;
     TestModelList testModelList;
 
     TestAdapter() {

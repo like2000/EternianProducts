@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/silverTrans"
-            android:text="@{String.valueOf(var.arg1)}"
+            android:text="@{String.valueOf(safeUnbox(var.arg1))}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="18sp"
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/silverTrans"
-            android:text="@{String.valueOf(var.arg2)}"
+            android:text="@{String.valueOf(safeUnbox(var.arg2))}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="18sp"
@@ -58,9 +58,11 @@
             android:background="@drawable/background_result"
             android:hint="@string/edit_text_ph"
             android:inputType="number"
+            android:text="@={`` + var.result}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_light"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

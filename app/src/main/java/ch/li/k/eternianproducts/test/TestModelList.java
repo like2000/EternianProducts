@@ -1,11 +1,16 @@
 package ch.li.k.eternianproducts.test;
 
+import android.graphics.drawable.ColorDrawable;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 
 public class TestModelList extends ArrayList<TestModelList.TestModel> {
+    private static final ColorDrawable redTrans = new ColorDrawable(0xa0ff0000);
+    private static final ColorDrawable greenTrans = new ColorDrawable(0xa0228B22);
+    private static final ColorDrawable silverTrans = new ColorDrawable(0xA0C0C0C0);
 
     private static final int bound2 = 2;
     private static final Random rng2 = new Random();
@@ -60,10 +65,11 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
     }
 
     public class TestModel {
-
         public String operator;
-        public Integer arg1, arg2;
+        public Integer arg1, arg2, result;
         public Integer value1, value2, value3;
+
+        private ColorDrawable color;
         private ArrayList<Integer> valList1, valList2, valList3;
 
         TestModel(int n_elements) {
@@ -76,8 +82,6 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
             value1 = random.nextInt(10);
             value2 = random.nextInt(10);
             value3 = random.nextInt(10);
-
-            System.out.println(value1 + ", " + value2 + ", " + value3);
         }
 
         TestModel(int arg1, int arg2, String operator) {
@@ -112,6 +116,10 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 //                }
 //            }
 //            taskList.setValue(list);
+        }
+
+        public void setResult(Integer result) {
+            this.result = result;
         }
     }
 }
