@@ -16,16 +16,27 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
     private static final Random rng2 = new Random();
     private static final Random rng10 = new Random();
 
-    private static int bound10;
-    private static String[] ops;
-
+    private String operations;
     private int nElements;
+    private String[] ops;
+    private int bound10;
 
-    TestModelList(int nElements) {
+    TestModelList(int nElements, int bound10, String operations) {
 
-        bound10 = 12;
+        this.bound10 = bound10;
         this.nElements = nElements;
-        switchOperators(Operators.MULTIDIVI);
+        this.operations = operations;
+
+        switch (this.operations) {
+            case ("PLUSPLUS"):
+                switchOperators(Operators.PLUSPLUS);
+            case ("PLUSMINUS"):
+                switchOperators(Operators.PLUSMINUS);
+            case ("MULTIDIVI"):
+                switchOperators(Operators.MULTIDIVI);
+            case ("MULTIMULTI"):
+                switchOperators(Operators.MULTIMULTI);
+        }
 
         updateModelList();
     }
@@ -55,6 +66,21 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
             case MULTIDIVI:
                 ops = new String[]{"*", "\u00F7"};
         }
+    }
+
+    public void setOperations(String operations) {
+        this.operations = operations;
+        this.updateModelList();
+    }
+
+    public void setnElements(int nElements) {
+        this.nElements = nElements;
+        this.updateModelList();
+    }
+
+    public void setBound10(int bound10) {
+        this.bound10 = bound10;
+        this.updateModelList();
     }
 
     private enum Operators {
@@ -120,6 +146,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
         public void setResult(Integer result) {
             this.result = result;
+            System.out.println("Hey ho! Hey ho! Heyhoheyhoheyho!!!");
         }
     }
 }

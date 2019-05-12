@@ -1,9 +1,11 @@
 package ch.li.k.eternianproducts;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,11 +28,15 @@ public class MainActivity extends AppCompatActivity {
 //        ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
         // Toolbar
-        // =======
         setSupportActionBar(findViewById(R.id.toolbar));
 
+        // Preferences
+//        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+//        String marketPref = sharedPref
+//                .getString("sync_frequency", "-1");
+
         // Inflate fragment
-        // ================
         getSupportFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
@@ -39,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         // Countdown timer
-        // ===============
         startCountdownTimer();
     }
 

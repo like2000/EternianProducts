@@ -10,11 +10,16 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
-    private final int N_ELEMENTS = 14;
     TestModelList testModelList;
+    private String OPERATIONS;
+    private int N_ELEMENTS;
+    private int BOUND10;
 
-    TestAdapter() {
-        testModelList = new TestModelList(N_ELEMENTS);
+    TestAdapter(int N_ELEMENTS) {
+        this.BOUND10 = 12;
+        this.N_ELEMENTS = N_ELEMENTS;
+        this.OPERATIONS = "MULTIMULTI";
+        testModelList = new TestModelList(N_ELEMENTS, BOUND10, OPERATIONS);
     }
 
     @Override

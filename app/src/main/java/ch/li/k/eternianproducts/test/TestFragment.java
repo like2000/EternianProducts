@@ -1,11 +1,13 @@
 package ch.li.k.eternianproducts.test;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
@@ -24,6 +26,10 @@ public class TestFragment extends Fragment {
     public FrameLayout animationBarTop;
     public FrameLayout animationBarBottom;
 
+    int TIMEOUT;
+    int N_ELEMENTS;
+    String OPERATORS;
+
     Uri videoUri;
     TestAdapter adapter;
     RecyclerView recyclerView;
@@ -36,10 +42,6 @@ public class TestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         FragmentTestBinding binding = FragmentTestBinding.inflate(inflater, container, false);
 
-//        AnimationSkeletorBinding bindingSkeletor = AnimationSkeletorBinding.inflate(
-//                inflater, getActivity().findViewById(R.id.animationBarTop), false);
-//        bindingSkeletor.executePendingBindings();
-
         return binding.getRoot();
     }
 
@@ -47,10 +49,13 @@ public class TestFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        initPreferences();
+
         recyclerView = getActivity().findViewById(R.id.recyclerTest);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        adapter = new TestAdapter();
+        adapter = new TestAdapter(N_ELEMENTS);
+        adapter.testModelList.updateModelList();
         recyclerView.setAdapter(adapter);
     }
 
@@ -58,6 +63,17 @@ public class TestFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
+    }
+
+    void initPreferences() {
+        PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        OPERATORS = sharedPref.getString("preference_operators", "MULTIDIVI");
+        TIMEOUT = Integer.parseInt(sharedPref.getString("preference_timeout", "3"));
+        N_ELEMENTS = Integer.parseInt(sharedPref.getString("preference_calcRange", "12"));
+        System.out.println("Timeout preference: " + TIMEOUT);
+        System.out.println("Operators preference: " + OPERATORS);
+        System.out.println("Calc range preference: " + N_ELEMENTS);
     }
 
     public void update() {

@@ -15,14 +15,14 @@
         android:summary="Select timeout in minutes"
         android:title="Timeout" />
     <ListPreference
-        android:defaultValue="3"
+        android:defaultValue="MULTIDIVI"
         android:entries="@array/operators"
         android:entryValues="@array/operators"
         android:key="preference_calculation"
         android:summary="Select type of calculations"
         android:title="Calculation type" />
     <ListPreference
-        android:defaultValue="3"
+        android:defaultValue="12"
         android:entries="@array/calcRange"
         android:entryValues="@array/calcRange"
         android:key="preference_range"
