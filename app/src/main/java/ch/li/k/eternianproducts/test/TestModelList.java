@@ -12,38 +12,24 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
     private static final ColorDrawable greenTrans = new ColorDrawable(0xa0228B22);
     private static final ColorDrawable silverTrans = new ColorDrawable(0xA0C0C0C0);
 
-    private static final int bound2 = 2;
-    private static final Random rng2 = new Random();
     private static final Random rng10 = new Random();
+    private static final Random rng2 = new Random();
+    private static final int bound2 = 2;
 
-    private String operations;
-    private int nElements;
+    private String operations = "MULTIDIVI";
+    private int nElements = 12;
+    private int bound10 = 12;
     private String[] ops;
-    private int bound10;
 
-    TestModelList(int nElements, int bound10, String operations) {
-
-        this.bound10 = bound10;
-        this.nElements = nElements;
-        this.operations = operations;
-
-        switch (this.operations) {
-            case ("PLUSPLUS"):
-                switchOperators(Operators.PLUSPLUS);
-            case ("PLUSMINUS"):
-                switchOperators(Operators.PLUSMINUS);
-            case ("MULTIDIVI"):
-                switchOperators(Operators.MULTIDIVI);
-            case ("MULTIMULTI"):
-                switchOperators(Operators.MULTIMULTI);
-        }
-
+    TestModelList() {
         updateModelList();
     }
 
     void updateModelList() {
         int a, b;
         String op;
+
+        switchOperators(this.operations);
 
         this.clear();
         for (int i = 0; i < nElements; i++) {
@@ -55,40 +41,41 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
         }
     }
 
-    private void switchOperators(Operators operations) {
+    void updateModelList(int nElements, int bound10, String operations) {
+        this.operations = operations;
+        this.nElements = nElements;
+        this.bound10 = bound10;
+
+        this.updateModelList();
+    }
+
+    private void switchOperators(String operations) {
         switch (operations) {
-            case PLUSPLUS:
+            case "PLUSPLUS":
                 ops = new String[]{"+", "+"};
-            case PLUSMINUS:
+            case "PLUSMINUS":
                 ops = new String[]{"+", "-"};
-            case MULTIMULTI:
+            case "MULTIMULTI":
                 ops = new String[]{"*", "*"};
-            case MULTIDIVI:
+            case "MULTIDIVI":
                 ops = new String[]{"*", "\u00F7"};
         }
     }
 
-    public void setOperations(String operations) {
-        this.operations = operations;
-        this.updateModelList();
-    }
-
-    public void setnElements(int nElements) {
-        this.nElements = nElements;
-        this.updateModelList();
-    }
-
-    public void setBound10(int bound10) {
-        this.bound10 = bound10;
-        this.updateModelList();
-    }
-
-    private enum Operators {
-        PLUSPLUS,
-        PLUSMINUS,
-        MULTIDIVI,
-        MULTIMULTI,
-    }
+//    public void setOperations(String operations) {
+//        this.operations = operations;
+//        this.updateModelList();
+//    }
+//
+//    public void setnElements(int nElements) {
+//        this.nElements = nElements;
+//        this.updateModelList();
+//    }
+//
+//    public void setBound10(int bound10) {
+//        this.bound10 = bound10;
+//        this.updateModelList();
+//    }
 
     public class TestModel {
         public String operator;
@@ -126,13 +113,6 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
                     this.arg1 = arg1;
                     this.arg2 = arg2;
             }
-            this.operator = operator;
-
-//            for (int i = 0; i < nTasks; i++) {
-//                a = rng10.nextInt(bound10) + 1;
-//                b = rng10.nextInt(bound10) + 1;
-//                op = ops[rng2.nextInt(bound2)];
-//
 //                if (op.equals("*")) {
 //                    list.add(new TaskModel(a, b, op));
 //                } else if (op.equals("\u00F7")) {
@@ -140,8 +120,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 //                } else {
 //                    list.add(new TaskModel(a, b, op));
 //                }
-//            }
-//            taskList.setValue(list);
+            this.operator = operator;
         }
 
         public void setResult(Integer result) {

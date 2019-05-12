@@ -26,10 +26,6 @@ public class TestFragment extends Fragment {
     public FrameLayout animationBarTop;
     public FrameLayout animationBarBottom;
 
-    int TIMEOUT;
-    int N_ELEMENTS;
-    String OPERATORS;
-
     Uri videoUri;
     TestAdapter adapter;
     RecyclerView recyclerView;
@@ -49,14 +45,13 @@ public class TestFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initPreferences();
-
         recyclerView = getActivity().findViewById(R.id.recyclerTest);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        adapter = new TestAdapter(N_ELEMENTS);
-        adapter.testModelList.updateModelList();
+        adapter = new TestAdapter();
         recyclerView.setAdapter(adapter);
+
+        initPreferences();
     }
 
     @Override
@@ -68,16 +63,23 @@ public class TestFragment extends Fragment {
     void initPreferences() {
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        OPERATORS = sharedPref.getString("preference_operators", "MULTIDIVI");
-        TIMEOUT = Integer.parseInt(sharedPref.getString("preference_timeout", "3"));
-        N_ELEMENTS = Integer.parseInt(sharedPref.getString("preference_calcRange", "12"));
-        System.out.println("Timeout preference: " + TIMEOUT);
-        System.out.println("Operators preference: " + OPERATORS);
-        System.out.println("Calc range preference: " + N_ELEMENTS);
+        String operators = sharedPref.getString("preference_operators", "MULTIDIVI");
+        int timeout = Integer.parseInt(sharedPref.getString("preference_timeout", "3"));
+        int nElements = Integer.parseInt(sharedPref.getString("preference_calcRange", "12"));
+
+        updateModel(nElements, timeout, operators);
+        System.out.println("Timeout preference: " + timeout);
+        System.out.println("Operators preference: " + operators);
+        System.out.println("Calc range preference: " + nElements);
     }
 
-    public void update() {
+    public void updateModel() {
         adapter.testModelList.updateModelList();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void updateModel(int nElements, int bound10, String operations) {
+        adapter.testModelList.updateModelList(nElements, bound10, operations);
         adapter.notifyDataSetChanged();
     }
 
