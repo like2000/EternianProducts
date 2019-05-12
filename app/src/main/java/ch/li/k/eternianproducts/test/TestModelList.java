@@ -123,9 +123,12 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
             this.operator = operator;
         }
 
-        public void setResult(Integer result) {
-            this.result = result;
-            System.out.println("Hey ho! Hey ho! Heyhoheyhoheyho!!!");
+        public String getResult() {
+            return String.valueOf(this.result);
+        }
+
+        public void setResult(String result) {
+            this.result = Integer.parseInt(result);
         }
     }
 }

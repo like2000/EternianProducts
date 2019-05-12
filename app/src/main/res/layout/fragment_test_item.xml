@@ -58,7 +58,7 @@
             android:background="@drawable/background_result"
             android:hint="@string/edit_text_ph"
             android:inputType="number"
-            android:text="@={`` + var.result}"
+            android:text="@={var.result}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="18sp"

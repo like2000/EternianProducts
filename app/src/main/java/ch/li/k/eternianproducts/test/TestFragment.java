@@ -62,15 +62,22 @@ public class TestFragment extends Fragment {
 
     void initPreferences() {
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String operators = sharedPref.getString("preference_operators", "MULTIDIVI");
-        int timeout = Integer.parseInt(sharedPref.getString("preference_timeout", "3"));
-        int nElements = Integer.parseInt(sharedPref.getString("preference_calcRange", "12"));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        updateModel(nElements, timeout, operators);
-        System.out.println("Timeout preference: " + timeout);
-        System.out.println("Operators preference: " + operators);
-        System.out.println("Calc range preference: " + nElements);
+        sharedPreferences.registerOnSharedPreferenceChangeListener((preferences, key) -> {
+            String operators1 = preferences.getString("preference_operators", "MULTIDIVI");
+            int timeout1 = Integer.parseInt(preferences.getString("preference_timeout", "3"));
+            int nElements1 = Integer.parseInt(preferences.getString("preference_calcRange", "12"));
+            System.out.println("\n\n--> Updating settimgs...!");
+
+            updateModel(12, nElements1, operators1);
+        });
+
+        String operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+        int timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+        int nElements = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+
+        updateModel(12, nElements, operators);
     }
 
     public void updateModel() {
@@ -79,6 +86,7 @@ public class TestFragment extends Fragment {
     }
 
     public void updateModel(int nElements, int bound10, String operations) {
+        System.out.println("--> New settings: " + nElements + ", " + bound10 + ", " + operations);
         adapter.testModelList.updateModelList(nElements, bound10, operations);
         adapter.notifyDataSetChanged();
     }
