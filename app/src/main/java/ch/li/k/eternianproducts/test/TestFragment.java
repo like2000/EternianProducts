@@ -64,18 +64,26 @@ public class TestFragment extends Fragment {
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        sharedPreferences.registerOnSharedPreferenceChangeListener((preferences, key) -> {
-            String operators1 = preferences.getString("preference_operators", "MULTIDIVI");
-            int timeout1 = Integer.parseInt(preferences.getString("preference_timeout", "3"));
-            int nElements1 = Integer.parseInt(preferences.getString("preference_calcRange", "12"));
-            System.out.println("\n\n--> Updating settimgs...!");
+        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                String operators1 = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+                int timeout1 = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+                int nElements1 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+                System.out.println("\n\n--> Updating settimgs...!");
 
-            updateModel(12, nElements1, operators1);
-        });
+                updateModel(12, nElements1, operators1);
+            }
+        };
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         String operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
         int timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
         int nElements = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+
+        System.out.println("\n\n--> Our settings: nElements " + nElements + ", Bound10 " + timeout +
+                ", Operators " + operators);
 
         updateModel(12, nElements, operators);
     }
@@ -86,7 +94,6 @@ public class TestFragment extends Fragment {
     }
 
     public void updateModel(int nElements, int bound10, String operations) {
-        System.out.println("--> New settings: " + nElements + ", " + bound10 + ", " + operations);
         adapter.testModelList.updateModelList(nElements, bound10, operations);
         adapter.notifyDataSetChanged();
     }

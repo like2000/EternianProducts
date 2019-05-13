@@ -1,32 +1,29 @@
 package ch.li.k.eternianproducts.settings;
 
-
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
 import ch.li.k.eternianproducts.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
-
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
-
+    SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(R.string.hello_blank_fragment);
-        return textView;
-    }
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preferences, rootKey);
 
+//        findPreference("preference_timeout");
+//        findPreference("preference_calcRange");
+//        findPreference("preference_calculation").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                Fragment fragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+//                fragment.upd
+//
+//                return true;
+//            }
+//        });
+    }
 }

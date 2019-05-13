@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import ch.li.k.eternianproducts.settings.SettingsActivity;
-import ch.li.k.eternianproducts.settings.SettingsDialog;
+import ch.li.k.eternianproducts.settings.SettingsFragment;
 import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContainer, new SettingsDialog())
+                    .replace(R.id.fragmentContainer, new SettingsFragment())
                     .commit();
 
             return true;
