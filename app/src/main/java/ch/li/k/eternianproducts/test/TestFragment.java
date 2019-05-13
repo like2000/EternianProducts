@@ -30,6 +30,22 @@ public class TestFragment extends Fragment {
     TestAdapter adapter;
     RecyclerView recyclerView;
 
+    String operators;
+    int nElements;
+    int bound10;
+    int timeout;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+            bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+
+            updateModel(12, bound10, operators);
+        }
+    };
+
     public TestFragment() {
     }
 
@@ -62,30 +78,15 @@ public class TestFragment extends Fragment {
 
     void initPreferences() {
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                String operators1 = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-                int timeout1 = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-                int nElements1 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
-                System.out.println("\n\n--> Updating settimgs...!");
-
-                updateModel(12, nElements1, operators1);
-            }
-        };
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
-        String operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-        int timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-        int nElements = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+        operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+        bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
 
-        System.out.println("\n\n--> Our settings: nElements " + nElements + ", Bound10 " + timeout +
-                ", Operators " + operators);
-
-        updateModel(12, nElements, operators);
+        updateModel(12, bound10, operators);
     }
 
     public void updateModel() {
@@ -94,6 +95,9 @@ public class TestFragment extends Fragment {
     }
 
     public void updateModel(int nElements, int bound10, String operations) {
+        System.out.println("\n\n--> Updating settimgs...!");
+        System.out.println("\n\n--> Our settings: calcRange " + bound10 + ", Bound10 " + timeout +
+                ", Operators " + operators);
         adapter.testModelList.updateModelList(nElements, bound10, operations);
         adapter.notifyDataSetChanged();
     }
