@@ -27,7 +27,6 @@ public class TestFragment extends Fragment {
     public FrameLayout animationBarBottom;
 
     Uri videoUri;
-    TestAdapter adapter;
     RecyclerView recyclerView;
 
     String operators;
@@ -38,9 +37,9 @@ public class TestFragment extends Fragment {
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+            operators = sharedPreferences.getString("preference_calculation", "MULTIDIVI");
             timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-            bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+            bound10 = Integer.parseInt(sharedPreferences.getString("preference_range", "12"));
 
             updateModel(12, bound10, operators);
         }
@@ -63,9 +62,7 @@ public class TestFragment extends Fragment {
 
         recyclerView = getActivity().findViewById(R.id.recyclerTest);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-        adapter = new TestAdapter();
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(new TestAdapter());
 
         initPreferences();
     }
@@ -90,14 +87,13 @@ public class TestFragment extends Fragment {
     }
 
     public void updateModel() {
+        TestAdapter adapter = (TestAdapter) recyclerView.getAdapter();
         adapter.testModelList.updateModelList();
         adapter.notifyDataSetChanged();
     }
 
     public void updateModel(int nElements, int bound10, String operations) {
-        System.out.println("\n\n--> Updating settimgs...!");
-        System.out.println("\n\n--> Our settings: calcRange " + bound10 + ", Bound10 " + timeout +
-                ", Operators " + operators);
+        TestAdapter adapter = (TestAdapter) recyclerView.getAdapter();
         adapter.testModelList.updateModelList(nElements, bound10, operations);
         adapter.notifyDataSetChanged();
     }

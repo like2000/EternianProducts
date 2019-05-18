@@ -47,9 +47,13 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
         this.bound10 = bound10;
 
         this.updateModelList();
+        System.out.println("\n\n--> Updating settimgs...!");
+        System.out.println("\n\n--> Our settings: calcRange " + bound10 + ", Bound10 " + nElements +
+                ", Operators: " + ops[0] + ", "+ ops[1]);
     }
 
     private void switchOperators(String operations) {
+        System.out.println(operations);
         switch (operations) {
             case "PLUSPLUS":
                 ops = new String[]{"+", "+"};
