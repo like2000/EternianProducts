@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:persistent="true"
     android:windowBackground="?attr/colorBackgroundFloating">
 
@@ -18,15 +18,23 @@
         android:defaultValue="MULTIDIVI"
         android:entries="@array/operators"
         android:entryValues="@array/operators"
-        android:key="preference_calculation"
+        android:key="preference_operators"
         android:summary="Select type of calculations"
         android:title="Calculation type" />
     <ListPreference
         android:defaultValue="12"
         android:entries="@array/calcRange"
         android:entryValues="@array/calcRange"
-        android:key="preference_range"
+        android:key="preference_calcRange"
         android:summary="Select maximum range for numbers used"
         android:title="Calculation range" />
+    <DropDownPreference
+        android:defaultValue="3"
+        android:dialogIcon="@android:drawable/arrow_down_float"
+        android:entries="@array/nElements"
+        android:entryValues="@array/nElements"
+        android:gravity="right"
+        android:key="preference_nElements"
+        android:title="Number of calculations" />
 
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

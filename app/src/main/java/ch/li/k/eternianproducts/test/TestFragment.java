@@ -39,9 +39,10 @@ public class TestFragment extends Fragment {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             operators = sharedPreferences.getString("preference_calculation", "MULTIDIVI");
             timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-            bound10 = Integer.parseInt(sharedPreferences.getString("preference_range", "12"));
+            bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+            nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
-            updateModel(12, bound10, operators);
+            updateModel(nElements, bound10, operators);
         }
     };
 
@@ -76,14 +77,15 @@ public class TestFragment extends Fragment {
     void initPreferences() {
         PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
         timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+        nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
+        System.out.println(sharedPreferences.getAll().keySet());
 
-        updateModel(12, bound10, operators);
+        updateModel(nElements, bound10, operators);
     }
 
     public void updateModel() {
