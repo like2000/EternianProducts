@@ -28,6 +28,9 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind(testModelList.get(position));
+
+        // Bit more logic now...
+        // =====================
         holder.result.getText().clear();
     }
 

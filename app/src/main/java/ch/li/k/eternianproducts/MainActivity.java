@@ -13,8 +13,6 @@ import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int bound10 = 12;
-    private static final int nTasks = 12;
     private static final int time = 1;
 
     private CountDownTimer countdown;
