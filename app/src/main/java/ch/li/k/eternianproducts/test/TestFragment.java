@@ -29,16 +29,17 @@ public class TestFragment extends Fragment {
     Uri videoUri;
     RecyclerView recyclerView;
 
-    String operators;
-    int nElements;
     int bound10;
     int timeout;
+    int nElements;
+    String operators;
+
     SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             operators = sharedPreferences.getString("preference_calculation", "MULTIDIVI");
-            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3")); // TODO: this actually needs to be in main activity!
             bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
             nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
@@ -79,11 +80,10 @@ public class TestFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
-        operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+        operators = sharedPreferences.getString("preference_calculation", "MULTIDIVI");
+        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3")); // TODO: this actually needs to be in main activity!
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
         nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
-        System.out.println(sharedPreferences.getAll().keySet());
 
         updateModel(nElements, bound10, operators);
     }

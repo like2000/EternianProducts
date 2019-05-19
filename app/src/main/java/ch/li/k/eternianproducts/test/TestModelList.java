@@ -83,48 +83,37 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
     public class TestModel {
         public String operator;
+        public ColorDrawable color;
         public Integer arg1, arg2, result;
-        public Integer value1, value2, value3;
 
-        private ColorDrawable color;
-        private ArrayList<Integer> valList1, valList2, valList3;
-
-        TestModel(int n_elements) {
-            Random random = new Random();
-
-            valList1 = random.ints(n_elements).boxed().collect(Collectors.toCollection(ArrayList::new));
-            valList2 = random.ints(n_elements).boxed().collect(Collectors.toCollection(ArrayList::new));
-            valList3 = random.ints(n_elements).boxed().collect(Collectors.toCollection(ArrayList::new));
-
-            value1 = random.nextInt(10);
-            value2 = random.nextInt(10);
-            value3 = random.nextInt(10);
-        }
+        private ArrayList<Integer> valList1;
 
         TestModel(int arg1, int arg2, String operator) {
+
+            Random random = new Random();
+            valList1 = random.ints(nElements).boxed().collect(Collectors.toCollection(ArrayList::new));
 
             switch (operator) {
                 case ("*"):
                     this.arg1 = arg1;
                     this.arg2 = arg2;
+                    break;
                 case ("\u00F7"):
-                    this.arg1 = arg1;
+                    this.arg1 = arg1 * arg2;
                     this.arg2 = arg2;
+                    break;
                 case ("+"):
                     this.arg1 = arg1;
                     this.arg2 = arg2;
+                    break;
                 case ("-"):
-                    this.arg1 = arg1;
+                    this.arg1 = arg1 + arg2;
                     this.arg2 = arg2;
+                    break;
             }
-//                if (op.equals("*")) {
-//                    list.add(new TaskModel(a, b, op));
-//                } else if (op.equals("\u00F7")) {
-//                    list.add(new TaskModel(a * b, b, op));
-//                } else {
-//                    list.add(new TaskModel(a, b, op));
-//                }
+
             this.operator = operator;
+            this.color = silverTrans;
         }
 
         public String getResult() {
@@ -132,7 +121,35 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
         }
 
         public void setResult(String result) {
-            this.result = Integer.parseInt(result);
+            boolean out = false;
+//            if ("*".equals(operator)) {
+//                out = arg1 * arg2 == result;
+//            } else if ("\u00F7".equals(operator)) {
+//                out = arg1 / arg2 == result;
+//            } else if ("+".equals(operator)) {
+//                out = arg1 + arg2 == result;
+//            }
+//
+//            if (out) {
+//                setColor(greenTrans);
+//                setCheck(true);
+//            } else {
+//                setColor(redTrans);
+//                setCheck(false);
+//            }
+            try {
+                this.result = Integer.parseInt(result);
+            } catch (NumberFormatException e) {
+            }
+            this.color = greenTrans;
+            System.out.println(this.color + ", " +this.result);
+//            synchronized (TestModelList.this) {
+//                TestModelList.this.notify();
+//            }
+        }
+
+        public ColorDrawable getColor() {
+            return color;
         }
     }
 }

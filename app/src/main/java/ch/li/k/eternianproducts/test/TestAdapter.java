@@ -4,8 +4,10 @@ import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import ch.li.k.eternianproducts.BR;
+import ch.li.k.eternianproducts.R;
 import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
@@ -26,6 +28,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind(testModelList.get(position));
+        holder.result.getText().clear();
     }
 
     @Override
@@ -35,11 +38,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private final ViewDataBinding binding;
+        private final EditText result;
 
         ViewHolder(ViewDataBinding binding) {
             super(binding.getRoot());
 
             this.binding = binding;
+            this.result = binding.getRoot().findViewById(R.id.edResult);
         }
 
         void bind(TestModelList.TestModel model) {

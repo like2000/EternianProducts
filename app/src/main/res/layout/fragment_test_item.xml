@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:orientation="horizontal">
 
         <TextView
@@ -55,15 +55,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:background="@drawable/background_result"
+            android:autofillHints=""
+            android:background="@{var.color}"
             android:hint="@string/edit_text_ph"
             android:inputType="number"
             android:text="@={var.result}"
             android:textAlignment="center"
             android:textColor="@android:color/holo_orange_light"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:autofillHints="" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 

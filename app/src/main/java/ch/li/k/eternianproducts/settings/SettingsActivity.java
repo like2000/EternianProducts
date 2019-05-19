@@ -26,7 +26,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void leaveActivity(View v) {
-        System.out.println("Leaving settings dialog!");
         finish();
     }
 }
