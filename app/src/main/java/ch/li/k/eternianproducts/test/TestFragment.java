@@ -101,6 +101,10 @@ public class TestFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void checkResult() {
+
+    }
+
     public void runAnimationOrko() {
         animationBarBottom = getActivity().findViewById(R.id.animationBarBottom);
         try {
