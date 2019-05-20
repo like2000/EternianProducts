@@ -142,10 +142,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
             } catch (NumberFormatException e) {
             }
             this.color = greenTrans;
-            System.out.println(this.color + ", " + this.result);
-//            synchronized (TestModelList.this) {
-//                TestModelList.this.notify();
-//            }
+//            System.out.println(this.color + ", " + this.result);
         }
 
         public ColorDrawable getColor() {

@@ -12,6 +12,7 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
+    int currentFocus;
     TestModelList testModelList;
     private RecyclerView recyclerView;
 
@@ -34,37 +35,26 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.bind(testModelList.get(position));
 
         // Bit more logic now...
         // =====================
         holder.result.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!recyclerView.isComputingLayout()) {
-                notifyItemChanged(position);
-            }
+            holder.result.postDelayed(() -> {
+                if (!hasFocus) {
+                    System.out.println("--> Output: ");
+                    notifyItemChanged(position);
+                }
+            }, 100);
         });
 
-//        System.out.println("--> Recycler View: " + recyclerView + ", computing layout: " + recyclerView.isComputingLayout());
-//        if (recyclerView != null && !recyclerView.isComputingLayout()) {
-//        Handler handler = new Handler();
-//        holder.result.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    System.out.println("--> Dataset changed!");
-//                    handler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            notifyItemChanged(position);
-//                        }
-//                    });
-////                notifyItemChanged(position);
-////                    notifyDataSetChanged();
-//                }
+//        holder.result.setOnFocusChangeListener((v, hasFocus) -> new Handler(Looper.getMainLooper()).post(() -> {
+//            if (!hasFocus) {
+//                System.out.println("--> Output:");
+//                notifyItemChanged(position);
 //            }
-//        });
-//        }
+//        }));
 
-        holder.bind(testModelList.get(position));
         holder.result.getText().clear();
     }
 
@@ -83,7 +73,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
             this.binding = binding;
             this.result = binding.getRoot().findViewById(R.id.edResult);
         }
-
 
         void bind(TestModelList.TestModel model) {
             binding.setVariable(BR.var, model);
