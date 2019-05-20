@@ -122,27 +122,31 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
         public void setResult(String result) {
             boolean out = false;
-//            if ("*".equals(operator)) {
-//                out = arg1 * arg2 == result;
-//            } else if ("\u00F7".equals(operator)) {
-//                out = arg1 / arg2 == result;
-//            } else if ("+".equals(operator)) {
-//                out = arg1 + arg2 == result;
-//            }
-//
-//            if (out) {
-//                setColor(greenTrans);
-//                setCheck(true);
-//            } else {
-//                setColor(redTrans);
-//                setCheck(false);
-//            }
+
             try {
                 this.result = Integer.parseInt(result);
             } catch (NumberFormatException e) {
             }
-            this.color = greenTrans;
-//            System.out.println(this.color + ", " + this.result);
+
+            if (this.result != null) {
+                if ("*".equals(operator)) {
+                    out = arg1 * arg2 == this.result;
+                } else if ("\u00F7".equals(operator)) {
+                    out = arg1 / arg2 == this.result;
+                } else if ("+".equals(operator)) {
+                    out = arg1 + arg2 == this.result;
+                } else if ("-".equals(operator)) {
+                    out = arg1 - arg2 == this.result;
+                }
+
+                if (out) {
+                    this.color = greenTrans;
+                } else {
+                    this.color = redTrans;
+                }
+            } else {
+                this.color = silverTrans;
+            }
         }
 
         public ColorDrawable getColor() {

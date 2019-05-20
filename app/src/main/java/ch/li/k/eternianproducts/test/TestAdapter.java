@@ -12,9 +12,8 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
-    int currentFocus;
     TestModelList testModelList;
-    private RecyclerView recyclerView;
+//    private RecyclerView recyclerView;
 
     TestAdapter() {
         testModelList = new TestModelList();
@@ -27,24 +26,19 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         return new ViewHolder(binding);
     }
 
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        this.recyclerView = recyclerView;
-    }
+//    @Override
+//    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+//        super.onAttachedToRecyclerView(recyclerView);
+////        RecyclerView recyclerView = recyclerView;
+//    }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(testModelList.get(position));
-
         // Bit more logic now...
         // =====================
         holder.result.setOnFocusChangeListener((v, hasFocus) -> {
             holder.result.postDelayed(() -> {
-                if (!hasFocus) {
-                    System.out.println("--> Output: ");
-                    notifyItemChanged(position);
-                }
+                if (!hasFocus) notifyItemChanged(position);
             }, 100);
         });
 
@@ -55,6 +49,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 //            }
 //        }));
 
+        holder.bind(testModelList.get(position));
         holder.result.getText().clear();
     }
 
