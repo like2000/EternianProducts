@@ -10,12 +10,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.VideoView;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import ch.li.k.eternianproducts.R;
 import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
@@ -64,10 +68,12 @@ public class TestFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         recyclerView = getActivity().findViewById(R.id.recyclerTest);
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(new TestAdapter());
 
         initPreferences();
+        observeResults();
     }
 
     @Override
@@ -101,8 +107,26 @@ public class TestFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    public void checkResult() {
+    public void observeResults() {
+        TestAdapter adapter = (TestAdapter) recyclerView.getAdapter();
+        adapter.getTestModelList().getAllCorrect().observe(this, hasChanged -> {
+            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(v -> v.isCorrect());
+            System.out.println("--> model list: " + adapter.getTestModelList().stream().map((v) -> v.correct).collect(Collectors.toCollection(ArrayList::new)));
+            if (allCorrect) {
+                runAnimationHeMan();
+            }
+        });
 
+//        viewModel.getTaskList().observe(this, adapter::setTaskList);
+//        List<TaskModel> taskList = viewModel.getTaskList().getValue();
+//        taskList.forEach(task -> task.getCheck().observe(this, hasChanged -> {
+//            boolean allCorrect = taskList.stream().allMatch(taskModel -> taskModel.getCheck().getValue());
+//            if (allCorrect) {
+//                play_video();
+//            }
+//        }));
+
+//        adapter.testModelList.stream().map((TestModelList.TestModel t) -> System.out.println(t.toString()));
     }
 
     public void runAnimationOrko() {

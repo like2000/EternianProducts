@@ -17,6 +17,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     TestAdapter() {
         isVirgin = true;
+//        setHasStableIds(true);
         testModelList = new TestModelList();
     }
 
@@ -36,11 +37,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
                 if (!hasFocus) {
                     System.out.println("--> Output: " + holder.result.getText());
                     if (holder.result.getText() != null) {
-                        System.out.println("Reset!");
                         isVirgin = false;
                         notifyItemChanged(position);
-                    } else {
-                        holder.result.getText().clear();
                     }
                 }
             }, 100);
@@ -75,6 +73,15 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return testModelList.size();
+    }
+
+//    @Override
+//    public long getItemId(int position) {
+//        return super.getItemId(position);
+//    }
+
+    TestModelList getTestModelList() {
+        return testModelList;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

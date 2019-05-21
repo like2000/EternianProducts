@@ -1,5 +1,6 @@
 package ch.li.k.eternianproducts.test;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.ColorDrawable;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
     private static final Random rng10 = new Random();
     private static final Random rng2 = new Random();
     private static final int bound2 = 2;
+
+    private MutableLiveData<ArrayList<TestModelList.TestModel>> allCorrect;
 
     private String operations = "MULTIDIVI";
     private int nElements = 12;
@@ -39,6 +42,8 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
             this.add(new TestModel(a, b, op));
         }
+
+        allCorrect = new MutableLiveData<>();
     }
 
     void updateModelList(int nElements, int bound10, String operations) {
@@ -66,6 +71,14 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
         }
     }
 
+    MutableLiveData<ArrayList<TestModel>> getAllCorrect() {
+        return allCorrect;
+    }
+
+    public void setAllCorrect(MutableLiveData<ArrayList<TestModel>> allCorrect) {
+        this.allCorrect = allCorrect;
+    }
+
 //    public void setOperations(String operations) {
 //        this.operations = operations;
 //        this.updateModelList();
@@ -85,6 +98,8 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
         public String operator;
         public ColorDrawable color;
         public Integer arg1, arg2, result;
+
+        boolean correct;
 
         private ArrayList<Integer> valList1;
 
@@ -117,11 +132,14 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
         }
 
         public String getResult() {
-            return String.valueOf(this.result);
+            if (this.result != null)
+                return String.valueOf(this.result);
+            else
+                return null;
         }
 
         public void setResult(String result) {
-            boolean out = false;
+            correct = false;
 
             try {
                 this.result = Integer.parseInt(result);
@@ -130,16 +148,16 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
             if (this.result != null) {
                 if ("*".equals(operator)) {
-                    out = arg1 * arg2 == this.result;
+                    correct = arg1 * arg2 == this.result;
                 } else if ("\u00F7".equals(operator)) {
-                    out = arg1 / arg2 == this.result;
+                    correct = arg1 / arg2 == this.result;
                 } else if ("+".equals(operator)) {
-                    out = arg1 + arg2 == this.result;
+                    correct = arg1 + arg2 == this.result;
                 } else if ("-".equals(operator)) {
-                    out = arg1 - arg2 == this.result;
+                    correct = arg1 - arg2 == this.result;
                 }
 
-                if (out) {
+                if (correct) {
                     this.color = greenTrans;
                 } else {
                     this.color = redTrans;
@@ -147,6 +165,10 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
             } else {
                 this.color = silverTrans;
             }
+        }
+
+        boolean isCorrect() {
+            return correct;
         }
 
         public ColorDrawable getColor() {
