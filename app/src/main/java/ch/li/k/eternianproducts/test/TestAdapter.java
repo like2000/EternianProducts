@@ -13,9 +13,10 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     TestModelList testModelList;
-//    private RecyclerView recyclerView;
+    private boolean isVirgin;
 
     TestAdapter() {
+        isVirgin = true;
         testModelList = new TestModelList();
     }
 
@@ -26,31 +27,49 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         return new ViewHolder(binding);
     }
 
-//    @Override
-//    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-//        super.onAttachedToRecyclerView(recyclerView);
-////        RecyclerView recyclerView = recyclerView;
-//    }
-
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Bit more logic now...
         // =====================
         holder.result.setOnFocusChangeListener((v, hasFocus) -> {
             holder.result.postDelayed(() -> {
-                if (!hasFocus) notifyItemChanged(position);
+                if (!hasFocus) {
+                    System.out.println("--> Output: " + holder.result.getText());
+                    if (holder.result.getText() != null) {
+                        System.out.println("Reset!");
+                        isVirgin = false;
+                        notifyItemChanged(position);
+                    } else {
+                        holder.result.getText().clear();
+                    }
+                }
             }, 100);
         });
 
-//        holder.result.setOnFocusChangeListener((v, hasFocus) -> new Handler(Looper.getMainLooper()).post(() -> {
-//            if (!hasFocus) {
-//                System.out.println("--> Output:");
-//                notifyItemChanged(position);
+//        holder.result.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
 //            }
-//        }));
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                holder.result.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        notifyItemChanged(position);
+//                    }
+//                });
+//            }
+//        });
 
         holder.bind(testModelList.get(position));
-        holder.result.getText().clear();
+        if (isVirgin) holder.result.getText().clear();
     }
 
     @Override
