@@ -17,7 +17,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
     private static final Random rng2 = new Random();
     private static final int bound2 = 2;
 
-    private MutableLiveData<ArrayList<TestModelList.TestModel>> allCorrect;
+    private MutableLiveData<ArrayList<Boolean>> allCorrect;
 
     private String operations = "MULTIDIVI";
     private int nElements = 12;
@@ -71,12 +71,8 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
         }
     }
 
-    MutableLiveData<ArrayList<TestModel>> getAllCorrect() {
+    MutableLiveData<ArrayList<Boolean>> getAllCorrect() {
         return allCorrect;
-    }
-
-    public void setAllCorrect(MutableLiveData<ArrayList<TestModel>> allCorrect) {
-        this.allCorrect = allCorrect;
     }
 
 //    public void setOperations(String operations) {
@@ -169,6 +165,10 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
         boolean isCorrect() {
             return correct;
+        }
+
+        public void setCorrect(boolean correct) {
+            this.correct = correct;
         }
 
         public ColorDrawable getColor() {

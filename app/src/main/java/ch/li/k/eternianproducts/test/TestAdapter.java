@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 import ch.li.k.eternianproducts.BR;
 import ch.li.k.eternianproducts.R;
 import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
@@ -37,6 +39,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
                 if (!hasFocus) {
                     System.out.println("--> Output: " + holder.result.getText());
                     if (holder.result.getText() != null) {
+                        checkCorrect();
                         isVirgin = false;
                         notifyItemChanged(position);
                     }
@@ -79,6 +82,16 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 //    public long getItemId(int position) {
 //        return super.getItemId(position);
 //    }
+
+    public void checkCorrect() {
+        ArrayList<Boolean> allCorrect = new ArrayList<>();
+        for (TestModelList.TestModel testModel : testModelList) {
+            allCorrect.add(testModel.isCorrect());
+        }
+
+        testModelList.getAllCorrect().setValue(allCorrect);
+        System.out.println("--> Set new values!");
+    }
 
     TestModelList getTestModelList() {
         return testModelList;

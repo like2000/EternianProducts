@@ -59,6 +59,7 @@ public class TestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         FragmentTestBinding binding = FragmentTestBinding.inflate(inflater, container, false);
+        animationBarBottom = binding.animationBarBottom;
 
         return binding.getRoot();
     }
@@ -68,6 +69,7 @@ public class TestFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         recyclerView = getActivity().findViewById(R.id.recyclerTest);
+
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(new TestAdapter());
@@ -110,8 +112,9 @@ public class TestFragment extends Fragment {
     public void observeResults() {
         TestAdapter adapter = (TestAdapter) recyclerView.getAdapter();
         adapter.getTestModelList().getAllCorrect().observe(this, hasChanged -> {
-            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(v -> v.isCorrect());
-            System.out.println("--> model list: " + adapter.getTestModelList().stream().map((v) -> v.correct).collect(Collectors.toCollection(ArrayList::new)));
+            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
+            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
+            System.out.println("--> all correct: " + allCorrect);
             if (allCorrect) {
                 runAnimationHeMan();
             }
@@ -130,7 +133,6 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationOrko() {
-        animationBarBottom = getActivity().findViewById(R.id.animationBarBottom);
         try {
             animationBarBottom.removeAllViews();
         } catch (NullPointerException e) {
@@ -147,11 +149,11 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationHeMan() {
-        animationBarBottom = getActivity().findViewById(R.id.animationBarBottom);
         try {
             animationBarBottom.removeAllViews();
         } catch (NullPointerException e) {
         }
+
         View container = LayoutInflater.from(getContext()).inflate(R.layout.animation_heman, animationBarBottom);
         container.setVisibility(View.VISIBLE);
 
@@ -166,11 +168,11 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationBeastMan() {
-        animationBarBottom = getActivity().findViewById(R.id.animationBarBottom);
         try {
             animationBarBottom.removeAllViews();
         } catch (NullPointerException e) {
         }
+
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_game_over, animationBarBottom);
         container.setVisibility(View.GONE);
@@ -186,7 +188,6 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationSkeletor(long tick, float timeout) {
-        animationBarTop = getActivity().findViewById(R.id.animationBarTop);
         animationContainer = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_skeletor, animationBarTop);
         animationContainer.setAlpha((float) ((timeout - tick) / timeout));
