@@ -85,12 +85,12 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     public void checkCorrect() {
         ArrayList<Boolean> allCorrect = new ArrayList<>();
+
         for (TestModelList.TestModel testModel : testModelList) {
             allCorrect.add(testModel.isCorrect());
         }
 
         testModelList.getAllCorrect().setValue(allCorrect);
-        System.out.println("--> Set new values!");
     }
 
     TestModelList getTestModelList() {

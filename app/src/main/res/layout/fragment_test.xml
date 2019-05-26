@@ -29,9 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </android.support.v7.widget.RecyclerView>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
             android:id="@+id/animationBarBottom"
@@ -42,9 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/recyclerTest">
-
-        </FrameLayout>
+            app:layout_constraintTop_toTopOf="@+id/recyclerTest" />
 
     </android.support.constraint.ConstraintLayout>
 

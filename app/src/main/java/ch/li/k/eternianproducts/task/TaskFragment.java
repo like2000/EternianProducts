@@ -109,9 +109,8 @@ public class TaskFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
 
         recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.HORIZONTAL));
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
         recyclerView.getLayoutManager().setAutoMeasureEnabled(true);
 
@@ -120,7 +119,8 @@ public class TaskFragment extends Fragment {
         taskList.forEach(task -> task.getCheck().observe(this, hasChanged -> {
             boolean allCorrect = taskList.stream().allMatch(taskModel -> taskModel.getCheck().getValue());
             if (allCorrect) {
-                play_video();
+                System.out.println("All correct!");
+//                play_video();
             }
         }));
 

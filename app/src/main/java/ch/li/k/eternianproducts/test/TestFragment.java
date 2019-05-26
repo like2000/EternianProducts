@@ -1,5 +1,6 @@
 package ch.li.k.eternianproducts.test;
 
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -31,6 +32,8 @@ public class TestFragment extends Fragment {
     public FrameLayout animationBarBottom;
 
     Uri videoUri;
+    VideoView video;
+    TestAdapter adapter;
     RecyclerView recyclerView;
 
     int bound10;
@@ -52,6 +55,24 @@ public class TestFragment extends Fragment {
         }
     };
 
+    Observer observer = new Observer() {
+        @Override
+        public void onChanged(@Nullable Object o) {
+            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
+            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
+            System.out.println("--> all correct: " + allCorrect);
+            if (allCorrect) {
+//                    ArrayList<Boolean> allReset = new ArrayList<>();
+//                    for (int i = 0; i < adapter.getTestModelList().getAllCorrect().getValue().size(); i++)
+//                        allReset.add(false);
+//                    adapter.getTestModelList().getAllCorrect().setValue(allReset);
+//                    allCorrect = false;
+                System.out.println("Running video...");
+                runAnimationHeMan();
+            }
+        }
+    };
+
     public TestFragment() {
     }
 
@@ -68,14 +89,15 @@ public class TestFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        recyclerView = getActivity().findViewById(R.id.recyclerTest);
+        adapter = new TestAdapter();
+        adapter.getTestModelList().getAllCorrect().observe(this, observer);
 
+        recyclerView = getActivity().findViewById(R.id.recyclerTest);
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setAdapter(new TestAdapter());
+        recyclerView.setAdapter(adapter);
 
         initPreferences();
-        observeResults();
     }
 
     @Override
@@ -98,27 +120,37 @@ public class TestFragment extends Fragment {
     }
 
     public void updateModel() {
-        TestAdapter adapter = (TestAdapter) recyclerView.getAdapter();
         adapter.testModelList.updateModelList();
         adapter.notifyDataSetChanged();
     }
 
     public void updateModel(int nElements, int bound10, String operators) {
-        TestAdapter adapter = (TestAdapter) recyclerView.getAdapter();
         adapter.testModelList.updateModelList(nElements, bound10, operators);
         adapter.notifyDataSetChanged();
     }
 
-    public void observeResults() {
-        TestAdapter adapter = (TestAdapter) recyclerView.getAdapter();
-        adapter.getTestModelList().getAllCorrect().observe(this, hasChanged -> {
-            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
-            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
-            System.out.println("--> all correct: " + allCorrect);
-            if (allCorrect) {
-                runAnimationHeMan();
-            }
-        });
+//    public void observeResults() {
+//        observer = new Observer() {
+//            @Override
+//            public void onChanged(@Nullable Object o) {
+//                boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
+//                System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
+//                System.out.println("--> all correct: " + allCorrect);
+//                if (allCorrect) {
+////                    ArrayList<Boolean> allReset = new ArrayList<>();
+////                    for (int i = 0; i < adapter.getTestModelList().getAllCorrect().getValue().size(); i++)
+////                        allReset.add(false);
+////                    adapter.getTestModelList().getAllCorrect().setValue(allReset);
+////                    allCorrect = false;
+//                    System.out.println("Running video...");
+//                    runAnimationHeMan();
+//                }
+//            }
+//        };
+
+//        adapter.getTestModelList().getAllCorrect().observe(this, observer);
+
+    // Try with implementing a key listener instead
 
 //        viewModel.getTaskList().observe(this, adapter::setTaskList);
 //        List<TaskModel> taskList = viewModel.getTaskList().getValue();
@@ -130,6 +162,36 @@ public class TestFragment extends Fragment {
 //        }));
 
 //        adapter.testModelList.stream().map((TestModelList.TestModel t) -> System.out.println(t.toString()));
+//}
+
+    public void runAnimationHeMan() {
+        adapter.getTestModelList().getAllCorrect().removeObservers(this);
+
+        try {
+            animationBarBottom.removeAllViews();
+        } catch (NullPointerException e) {
+        }
+
+        View container = LayoutInflater.from(getContext())
+                .inflate(R.layout.animation_heman, animationBarBottom);
+        container.setVisibility(View.VISIBLE);
+
+        video = container.findViewById(R.id.video_heman);
+        video.setVideoURI(this.videoUri);
+        video.seekTo(1);
+        video.requestFocus();
+        video.start();
+        System.out.println("Video at: " + video.getCurrentPosition());
+
+        video.setOnCompletionListener((v) -> {
+            video.stopPlayback();
+            video.seekTo(1);
+//            video.resume();
+//            System.out.println("Video done! Now we can re-add the observer...?");
+//            adapter.getTestModelList().getAllCorrect().observe(this, observer);
+        });
+
+//        adapter.getTestModelList().getAllCorrect().observe(this, observer);
     }
 
     public void runAnimationOrko() {
@@ -139,32 +201,15 @@ public class TestFragment extends Fragment {
         }
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_orko, animationBarBottom);
+        container.setVisibility(View.VISIBLE);
 
         TransitionManager.beginDelayedTransition(animationBarBottom);
-        container.setVisibility(View.VISIBLE);
         container.postDelayed(() -> {
             TransitionManager.beginDelayedTransition(animationBarBottom);
             container.setVisibility(View.GONE);
         }, 3000);
-    }
 
-    public void runAnimationHeMan() {
-        try {
-            animationBarBottom.removeAllViews();
-        } catch (NullPointerException e) {
-        }
-
-        View container = LayoutInflater.from(getContext()).inflate(R.layout.animation_heman, animationBarBottom);
-        container.setVisibility(View.VISIBLE);
-
-        VideoView video = container.findViewById(R.id.video_heman);
-        video.setVideoURI(this.videoUri);
-        video.start();
-
-        video.setOnCompletionListener((v) -> {
-            video.stopPlayback();
-            video.seekTo(0);
-        });
+        adapter.getTestModelList().getAllCorrect().observe(this, observer);
     }
 
     public void runAnimationBeastMan() {

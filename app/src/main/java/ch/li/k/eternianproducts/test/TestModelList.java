@@ -25,6 +25,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
     private String[] ops;
 
     TestModelList() {
+        allCorrect = new MutableLiveData<>();
         updateModelList();
     }
 
@@ -42,8 +43,6 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
             this.add(new TestModel(a, b, op));
         }
-
-        allCorrect = new MutableLiveData<>();
     }
 
     void updateModelList(int nElements, int bound10, String operations) {
