@@ -62,11 +62,6 @@ public class TestFragment extends Fragment {
             System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
             System.out.println("--> all correct: " + allCorrect);
             if (allCorrect) {
-//                    ArrayList<Boolean> allReset = new ArrayList<>();
-//                    for (int i = 0; i < adapter.getTestModelList().getAllCorrect().getValue().size(); i++)
-//                        allReset.add(false);
-//                    adapter.getTestModelList().getAllCorrect().setValue(allReset);
-//                    allCorrect = false;
                 System.out.println("Running video...");
                 runAnimationHeMan();
             }
@@ -81,6 +76,8 @@ public class TestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         FragmentTestBinding binding = FragmentTestBinding.inflate(inflater, container, false);
         animationBarBottom = binding.animationBarBottom;
+        animationBarTop = binding.animationBarTop;
+        recyclerView = binding.recyclerTest;
 
         return binding.getRoot();
     }
@@ -92,10 +89,9 @@ public class TestFragment extends Fragment {
         adapter = new TestAdapter();
         adapter.getTestModelList().getAllCorrect().observe(this, observer);
 
-        recyclerView = getActivity().findViewById(R.id.recyclerTest);
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
 
         initPreferences();
     }
@@ -129,48 +125,13 @@ public class TestFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-//    public void observeResults() {
-//        observer = new Observer() {
-//            @Override
-//            public void onChanged(@Nullable Object o) {
-//                boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
-//                System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
-//                System.out.println("--> all correct: " + allCorrect);
-//                if (allCorrect) {
-////                    ArrayList<Boolean> allReset = new ArrayList<>();
-////                    for (int i = 0; i < adapter.getTestModelList().getAllCorrect().getValue().size(); i++)
-////                        allReset.add(false);
-////                    adapter.getTestModelList().getAllCorrect().setValue(allReset);
-////                    allCorrect = false;
-//                    System.out.println("Running video...");
-//                    runAnimationHeMan();
-//                }
-//            }
-//        };
-
-//        adapter.getTestModelList().getAllCorrect().observe(this, observer);
-
-    // Try with implementing a key listener instead
-
-//        viewModel.getTaskList().observe(this, adapter::setTaskList);
-//        List<TaskModel> taskList = viewModel.getTaskList().getValue();
-//        taskList.forEach(task -> task.getCheck().observe(this, hasChanged -> {
-//            boolean allCorrect = taskList.stream().allMatch(taskModel -> taskModel.getCheck().getValue());
-//            if (allCorrect) {
-//                play_video();
-//            }
-//        }));
-
-//        adapter.testModelList.stream().map((TestModelList.TestModel t) -> System.out.println(t.toString()));
-//}
-
     public void runAnimationHeMan() {
         adapter.getTestModelList().getAllCorrect().removeObservers(this);
 
-        try {
-            animationBarBottom.removeAllViews();
-        } catch (NullPointerException e) {
-        }
+//        try {
+//            animationBarBottom.removeAllViews();
+//        } catch (NullPointerException e) {
+//        }
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_heman, animationBarBottom);
@@ -184,21 +145,20 @@ public class TestFragment extends Fragment {
         System.out.println("Video at: " + video.getCurrentPosition());
 
         video.setOnCompletionListener((v) -> {
-            video.stopPlayback();
             video.seekTo(1);
+            video.stopPlayback();
 //            video.resume();
 //            System.out.println("Video done! Now we can re-add the observer...?");
 //            adapter.getTestModelList().getAllCorrect().observe(this, observer);
         });
-
-//        adapter.getTestModelList().getAllCorrect().observe(this, observer);
     }
 
     public void runAnimationOrko() {
-        try {
-            animationBarBottom.removeAllViews();
-        } catch (NullPointerException e) {
-        }
+//        try {
+//            animationBarBottom.removeAllViews();
+//        } catch (NullPointerException e) {
+//        }
+
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_orko, animationBarBottom);
         container.setVisibility(View.VISIBLE);
@@ -213,10 +173,10 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationBeastMan() {
-        try {
-            animationBarBottom.removeAllViews();
-        } catch (NullPointerException e) {
-        }
+//        try {
+//            animationBarBottom.removeAllViews();
+//        } catch (NullPointerException e) {
+//        }
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_game_over, animationBarBottom);
@@ -233,6 +193,7 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationSkeletor(long tick, float timeout) {
+        System.out.println("Running Skeletor: " + tick + " of " + timeout);
         animationContainer = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_skeletor, animationBarTop);
         animationContainer.setAlpha((float) ((timeout - tick) / timeout));

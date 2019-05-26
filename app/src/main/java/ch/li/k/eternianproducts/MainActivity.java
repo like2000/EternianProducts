@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import ch.li.k.eternianproducts.settings.SettingsActivity;
-import ch.li.k.eternianproducts.settings.SettingsFragment;
 import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,16 +57,18 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+//        if (id == R.id.action_settings) {
+//            countdown.cancel();
+//
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.fragmentContainer, new SettingsFragment())
+//                    .commit();
+//
+//            return true;
+        if (id == R.id.action_update) {
             countdown.cancel();
 
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainer, new SettingsFragment())
-                    .commit();
-
-            return true;
-        } else if (id == R.id.action_update) {
             TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
             fragment.runAnimationOrko();
             fragment.updateModel();
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_preferences) {
             countdown.cancel();
+
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
             return true;
