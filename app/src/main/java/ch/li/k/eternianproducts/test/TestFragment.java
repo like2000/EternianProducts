@@ -22,6 +22,7 @@ import android.widget.VideoView;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import ch.li.k.eternianproducts.MainActivity;
 import ch.li.k.eternianproducts.R;
 import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
@@ -37,7 +38,6 @@ public class TestFragment extends Fragment {
     RecyclerView recyclerView;
 
     int bound10;
-    int timeout;
     int nElements;
     String operators;
 
@@ -46,7 +46,6 @@ public class TestFragment extends Fragment {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3")); // TODO: this actually needs to be in main activity!
             bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
             nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
             System.out.println(nElements + ", " + bound10 + ", " + operators);
@@ -108,7 +107,6 @@ public class TestFragment extends Fragment {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3")); // TODO: this actually needs to be in main activity!
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
         nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
@@ -140,24 +138,20 @@ public class TestFragment extends Fragment {
         video = container.findViewById(R.id.video_heman);
         video.setVideoURI(this.videoUri);
         video.seekTo(1);
-        video.requestFocus();
         video.start();
-        System.out.println("Video at: " + video.getCurrentPosition());
 
         video.setOnCompletionListener((v) -> {
-            video.seekTo(1);
             video.stopPlayback();
-//            video.resume();
-//            System.out.println("Video done! Now we can re-add the observer...?");
-//            adapter.getTestModelList().getAllCorrect().observe(this, observer);
+            System.out.println("Video at: " + video.getCurrentPosition());
+            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
         });
     }
 
     public void runAnimationOrko() {
-//        try {
-//            animationBarBottom.removeAllViews();
-//        } catch (NullPointerException e) {
-//        }
+        try {
+            animationBarBottom.removeAllViews();
+        } catch (NullPointerException e) {
+        }
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_orko, animationBarBottom);
@@ -193,7 +187,6 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationSkeletor(long tick, float timeout) {
-        System.out.println("Running Skeletor: " + tick + " of " + timeout);
         animationContainer = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_skeletor, animationBarTop);
         animationContainer.setAlpha((float) ((timeout - tick) / timeout));
