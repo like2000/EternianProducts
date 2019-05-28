@@ -17,7 +17,6 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -29,7 +28,7 @@ import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
 public class TestFragment extends Fragment {
 
-    private static final long TMAX = 5;
+    private static final long TMAX = 15;
 
     public View animationContainer;
     public FrameLayout animationBarTop;
@@ -66,8 +65,7 @@ public class TestFragment extends Fragment {
             accumulator += 2000;
             timeOffset = TMAX * 1000 - tick;
             Log.d("DEBUG", "Time offset now at: " + String.valueOf(timeOffset * 1e-3));
-//            Log.d("DEBUG", "Video duration is: " + String.valueOf(video.getDuration() * 1e-3));
-//
+
 //            if (timeOffset * 1e-3 > 10 & timeOffset * 1e-3 < 20) {
 //                video.pause();
 //            } else if (timeOffset * 1e-3 > 20) {
@@ -80,31 +78,23 @@ public class TestFragment extends Fragment {
 
         @Override
         public void onFinish() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, Menu.FLAG_PERFORM_NO_CLOSE);
-                    video.stopPlayback();
-                }
-            }, 1000);
-            Log.d("DEBUG", "Last tick at: " + String.valueOf(timeOffset));
-            Log.d("DEBUG", "Observer: " + adapter.getTestModelList().getAllCorrect().hasObservers());
-            Log.d("DEBUG", "Video at: " + video.getCurrentPosition() + ", current state: " + video.isPlaying());
+            video.stopPlayback();
+            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
         }
     };
 
-//    Observer observer = new Observer() {
-//        @Override
-//        public void onChanged(@Nullable Object o) {
-//            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
-////            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
-////            System.out.println("--> all correct: " + allCorrect);
-//            if (allCorrect) {
-//                System.out.println("\n\n--> Change triggered! Now running video...");
-//                runAnimationHeMan();
-//            }
-//        }
-//    };
+    Observer observer = new Observer() {
+        @Override
+        public void onChanged(@Nullable Object o) {
+            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
+//            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
+//            System.out.println("--> all correct: " + allCorrect);
+            if (allCorrect) {
+                System.out.println("\n\n--> Change triggered! Now running video...");
+                runAnimationHeMan();
+            }
+        }
+    };
 
     private int t0, t1, tmax;
 
@@ -127,19 +117,7 @@ public class TestFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         adapter = new TestAdapter();
-        adapter.getTestModelList().getAllCorrect().observe(this,
-                new Observer() {
-                    @Override
-                    public void onChanged(@Nullable Object o) {
-                        boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
-//            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
-//            System.out.println("--> all correct: " + allCorrect);
-                        if (allCorrect) {
-                            System.out.println("\n\n--> Change triggered! Now running video...");
-                            runAnimationHeMan();
-                        }
-                    }
-                });
+        adapter.getTestModelList().getAllCorrect().observe(this, observer);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -179,7 +157,6 @@ public class TestFragment extends Fragment {
 
     public void runAnimationHeMan() {
         adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
-        Log.d("DEBUG", "--> Observers status: " + adapter.getTestModelList().getAllCorrect().hasObservers());
 
 //        try {
 //            animationBarBottom.removeAllViews();
@@ -195,14 +172,11 @@ public class TestFragment extends Fragment {
         video.start();
         timer.start();
 
-//        video.setOnCompletionListener((v) -> {
-//            System.out.println("--> Turn off timer!");
-//            adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
-//            video.stopPlayback();
-//            timer.cancel();
-//            container.setVisibility(View.GONE);
-//            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
-//        });
+        video.setOnCompletionListener((v) -> {
+            timer.cancel();
+            video.stopPlayback();
+            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
+        });
     }
 
     public void runAnimationOrko() {
@@ -223,29 +197,14 @@ public class TestFragment extends Fragment {
             container.setVisibility(View.GONE);
         }, 3000);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.getTestModelList().getAllCorrect().observe(TestFragment.this,
-                        (Observer) o -> {
-                            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
-//            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
-//            System.out.println("--> all correct: " + allCorrect);
-                            if (allCorrect) {
-                                System.out.println("\n\n--> Change triggered! Now running video...");
-                                runAnimationHeMan();
-                            }
-                        });
-
-            }
-        }, 1000);
+        new Handler().postDelayed(() -> adapter.getTestModelList().getAllCorrect().observe(TestFragment.this, observer), 1000);
     }
 
     public void runAnimationBeastMan() {
-//        try {
-//            animationBarBottom.removeAllViews();
-//        } catch (NullPointerException e) {
-//        }
+        try {
+            animationBarBottom.removeAllViews();
+        } catch (NullPointerException e) {
+        }
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_game_over, animationBarBottom);
