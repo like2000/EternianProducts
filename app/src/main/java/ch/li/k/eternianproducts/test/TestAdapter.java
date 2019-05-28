@@ -25,7 +25,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewDataBinding binding = FragmentTestItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ViewDataBinding binding = FragmentTestItemBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
 
         return new ViewHolder(binding);
     }
