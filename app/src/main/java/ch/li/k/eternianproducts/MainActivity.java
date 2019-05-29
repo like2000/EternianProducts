@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startCountdownTimer() {
+    public void startCountdownTimer() {
         float timeout = this.timeout * 60 * 1000;
         try {
             countdown.cancel();

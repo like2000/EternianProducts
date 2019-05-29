@@ -28,7 +28,7 @@ import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
 public class TestFragment extends Fragment {
 
-    private static final long TMAX = 15;
+    private static final long TMAX = 30;
 
     public View animationContainer;
     public FrameLayout animationBarTop;
@@ -153,6 +153,8 @@ public class TestFragment extends Fragment {
     public void updateModel(int nElements, int bound10, String operators) {
         adapter.testModelList.updateModelList(nElements, bound10, operators);
         adapter.notifyDataSetChanged();
+
+        ((MainActivity) getActivity()).startCountdownTimer();
     }
 
     public void runAnimationHeMan() {
