@@ -3,12 +3,17 @@
 
 ### Screenshots
 
-- [] Looks good
-- [] Start
-<img src="screenshot_01.png" width=8>
+|Start | Running | Danger|
+|------|---------|-------|
 
-- [] Middle
-<img src="screenshot_02.png" width="10">
+<div class="column">
+    <img src="screenshot_01.png" alt="Start" width="30%">
+</div>
 
-- [] Success
-<img src="screenshot_03.png" width="12">
+<div class="column">
+    <img src="screenshot_02.png" alt="Running" width="30%">
+</div>
+
+<div class="column">
+    <img src="screenshot_03.png" alt="Danger" width="30%">
+</div>
