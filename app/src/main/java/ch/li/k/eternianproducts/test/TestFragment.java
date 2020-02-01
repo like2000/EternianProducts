@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
@@ -22,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.VideoView;
 
+import java.util.Objects;
+
 import ch.li.k.eternianproducts.MainActivity;
 import ch.li.k.eternianproducts.R;
 import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
@@ -30,19 +31,54 @@ public class TestFragment extends Fragment {
 
     private static final long TMAX = 30;
 
+    int bound10;
+    int nElements;
+    private String operators;
+    private int t0, t1, tmax;
+
+    private Uri videoUri;
+    private VideoView video;
+    private TestAdapter adapter;
+    private RecyclerView recyclerView;
+
     public View animationContainer;
     public FrameLayout animationBarTop;
     public FrameLayout animationBarBottom;
 
-    Uri videoUri;
-    VideoView video;
-    TestAdapter adapter;
-    RecyclerView recyclerView;
+    // Fragment instantiation
+    // ======================
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        FragmentTestBinding binding = FragmentTestBinding.inflate(inflater, container, false);
+        animationBarBottom = binding.animationBarBottom;
+        animationBarTop = binding.animationBarTop;
+        recyclerView = binding.recyclerTest;
 
-    int bound10;
-    int nElements;
-    String operators;
+        return binding.getRoot();
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        adapter = new TestAdapter();
+        adapter.getTestModelList().getAllCorrect().observe(this, observer);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
+
+        initPreferences();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_castle");
+    }
+
+    // Preferences management
+    // ======================
     SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -50,12 +86,25 @@ public class TestFragment extends Fragment {
             operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
             bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
             nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
-            System.out.println(nElements + ", " + bound10 + ", " + operators);
 
             updateModel(nElements, bound10, operators);
         }
     };
 
+    void initPreferences() {
+        PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+
+        operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+        bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
+        nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
+
+        updateModel(nElements, bound10, operators);
+    }
+
+    // Countdown timer
+    // ===============
     CountDownTimer timer = new CountDownTimer(TMAX * 1000, 1000) {
         long timeOffset = 0;
         long accumulator = 0;
@@ -86,9 +135,8 @@ public class TestFragment extends Fragment {
     Observer observer = new Observer() {
         @Override
         public void onChanged(@Nullable Object o) {
-            boolean allCorrect = adapter.getTestModelList().getAllCorrect().getValue().stream().allMatch(isCorrect -> isCorrect);
-//            System.out.println("--> model list: " + adapter.getTestModelList().getAllCorrect().getValue().stream().map((v) -> v.toString()).collect(Collectors.toCollection(ArrayList::new)));
-//            System.out.println("--> all correct: " + allCorrect);
+            boolean allCorrect = Objects.requireNonNull(adapter.getTestModelList().getAllCorrect().getValue())
+                    .stream().allMatch(isCorrect -> isCorrect);
             if (allCorrect) {
                 System.out.println("\n\n--> Change triggered! Now running video...");
                 runAnimationHeMan();
@@ -96,55 +144,8 @@ public class TestFragment extends Fragment {
         }
     };
 
-    private int t0, t1, tmax;
-
-    public TestFragment() {
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        FragmentTestBinding binding = FragmentTestBinding.inflate(inflater, container, false);
-        animationBarBottom = binding.animationBarBottom;
-        animationBarTop = binding.animationBarTop;
-        recyclerView = binding.recyclerTest;
-
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        adapter = new TestAdapter();
-        adapter.getTestModelList().getAllCorrect().observe(this, observer);
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
-
-        initPreferences();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_trafo");
-    }
-
-
-    void initPreferences() {
-        PreferenceManager.setDefaultValues(getContext(), R.xml.preferences, false);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
-
-        operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-        bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
-        nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
-
-        updateModel(nElements, bound10, operators);
-    }
-
+    // Model interaction and animations
+    // ================================
     public void updateModel() {
         adapter.testModelList.updateModelList();
         adapter.notifyDataSetChanged();
@@ -158,12 +159,7 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationHeMan() {
-        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
-
-//        try {
-//            animationBarBottom.removeAllViews();
-//        } catch (NullPointerException e) {
-//        }
+//        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_heman, animationBarBottom);
@@ -182,12 +178,13 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationOrko() {
-        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
+        // Why remove observer!?!
+//        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
 
-        try {
-            animationBarBottom.removeAllViews();
-        } catch (NullPointerException e) {
-        }
+//        try {
+//            animationBarBottom.removeAllViews();
+//        } catch (NullPointerException ignored) {
+//        }
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_orko, animationBarBottom);
@@ -199,14 +196,15 @@ public class TestFragment extends Fragment {
             container.setVisibility(View.GONE);
         }, 3000);
 
-        new Handler().postDelayed(() -> adapter.getTestModelList().getAllCorrect().observe(TestFragment.this, observer), 1000);
+        // Restart observing all correct
+//        new Handler().postDelayed(() -> adapter.getTestModelList().getAllCorrect().observe(TestFragment.this, observer), 1000);
     }
 
     public void runAnimationBeastMan() {
-        try {
-            animationBarBottom.removeAllViews();
-        } catch (NullPointerException e) {
-        }
+//        try {
+//            animationBarBottom.removeAllViews();
+//        } catch (NullPointerException ignored) {
+//        }
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_game_over, animationBarBottom);
