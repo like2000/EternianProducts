@@ -14,17 +14,12 @@ import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    SharedPreferences sharedPreferences;
     private int timeout;
-    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-        }
-    };
     private Menu mainMenu;
     private CountDownTimer countdown;
 
+    // Main activity creation
+    // ======================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
-        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-
         // Inflate fragment
         getSupportFragmentManager()
                 .beginTransaction()
@@ -49,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         // Countdown timer
+        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
         startCountdownTimer();
     }
 
@@ -97,6 +91,18 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Preferences management
+    // ======================
+    SharedPreferences sharedPreferences;
+    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+        }
+    };
+
+    // Main activity countdown timer
+    // =============================
     public void startCountdownTimer() {
         float timeout = this.timeout * 60 * 1000;
         try {
@@ -126,8 +132,4 @@ public class MainActivity extends AppCompatActivity {
     public Menu getMainMenu() {
         return mainMenu;
     }
-
-//    public CountDownTimer getCountdown() {
-//        return countdown;
-//    }
 }
