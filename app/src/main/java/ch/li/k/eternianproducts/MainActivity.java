@@ -15,8 +15,6 @@ import ch.li.k.eternianproducts.test.TestFragment;
 public class MainActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
-    private CountDownTimer countdown;
-    private Menu mainMenu;
     private int timeout;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -24,12 +22,13 @@ public class MainActivity extends AppCompatActivity {
             timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
         }
     };
+    private Menu mainMenu;
+    private CountDownTimer countdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        ActivityMainBinding binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
 
         // Toolbar
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         float timeout = this.timeout * 60 * 1000;
         try {
             countdown.cancel();
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
         }
 
         countdown = new CountDownTimer((long) timeout, 3000) {
@@ -124,11 +123,11 @@ public class MainActivity extends AppCompatActivity {
         countdown.start();
     }
 
-    public CountDownTimer getCountdown() {
-        return countdown;
-    }
-
     public Menu getMainMenu() {
         return mainMenu;
     }
+
+//    public CountDownTimer getCountdown() {
+//        return countdown;
+//    }
 }

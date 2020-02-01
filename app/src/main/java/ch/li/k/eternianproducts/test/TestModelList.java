@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 
 public class TestModelList extends ArrayList<TestModelList.TestModel> {
@@ -17,12 +16,12 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
     private static final Random rng2 = new Random();
     private static final int bound2 = 2;
 
-    private MutableLiveData<ArrayList<Boolean>> allCorrect;
-
     private String operations = "MULTIDIVI";
     private int nElements = 12;
     private int bound10 = 12;
     private String[] ops;
+
+    private MutableLiveData<ArrayList<Boolean>> allCorrect;
 
     TestModelList() {
         allCorrect = new MutableLiveData<>();
@@ -90,18 +89,13 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 //    }
 
     public class TestModel {
-        public String operator;
-        public ColorDrawable color;
         public Integer arg1, arg2, result;
+        public ColorDrawable color;
+        public String operator;
 
         boolean correct;
 
-        private ArrayList<Integer> valList1;
-
         TestModel(int arg1, int arg2, String operator) {
-
-            Random random = new Random();
-            valList1 = random.ints(nElements).boxed().collect(Collectors.toCollection(ArrayList::new));
 
             switch (operator) {
                 case ("*"):
@@ -138,7 +132,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
             try {
                 this.result = Integer.parseInt(result);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
             }
 
             if (this.result != null) {
