@@ -14,9 +14,11 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
-    TestModelList testModelList;
     private boolean isVirgin;
+    TestModelList testModelList;
 
+    // Adapter for one row - model to view
+    // ===================================
     TestAdapter() {
         isVirgin = true;
 //        setHasStableIds(true);
@@ -33,8 +35,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // Bit more logic now...
-        // =====================
+        // Bit more logic now... - need more listeners!
+        // ============================================
         holder.result.setOnFocusChangeListener((v, hasFocus) -> {
             holder.result.postDelayed(() -> {
                 if (!hasFocus) {
@@ -48,28 +50,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
             }, 100);
         });
 
-//        holder.result.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                holder.result.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        notifyItemChanged(position);
-//                    }
-//                });
-//            }
-//        });
-
         holder.bind(testModelList.get(position));
         if (isVirgin) holder.result.getText().clear();
     }
@@ -79,12 +59,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         return testModelList.size();
     }
 
-//    @Override
-//    public long getItemId(int position) {
-//        return super.getItemId(position);
-//    }
-
-    public void checkCorrect() {
+    // Method to check if all values are good - is observed by fragment
+    private void checkCorrect() {
         ArrayList<Boolean> allCorrect = new ArrayList<>();
 
         for (TestModelList.TestModel testModel : testModelList) {
@@ -98,6 +74,8 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         return testModelList;
     }
 
+    // Key element - view holder with data binding
+    // ===========================================
     class ViewHolder extends RecyclerView.ViewHolder {
         private final ViewDataBinding binding;
         private final EditText result;

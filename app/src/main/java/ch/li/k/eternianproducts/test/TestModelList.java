@@ -160,9 +160,9 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
             return correct;
         }
 
-        public void setCorrect(boolean correct) {
-            this.correct = correct;
-        }
+//        public void setCorrect(boolean correct) {
+//            this.correct = correct;
+//        }
 
         public ColorDrawable getColor() {
             return color;
