@@ -1,7 +1,9 @@
 package ch.li.k.eternianproducts;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.view.Menu;
@@ -12,14 +14,19 @@ import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
+    private int timeout;
+    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
+        }
+    };
     private Menu mainMenu;
+    private CountDownTimer countdown;
 
-    // Main activity instantiation
-    // ===========================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // Set main content
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -28,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Preferences
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+
+        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
 
         // Inflate fragment
         getSupportFragmentManager()
@@ -40,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         // Countdown timer
-//        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-//        startCountdownTimer();
+        startCountdownTimer();
     }
 
     @Override
@@ -69,14 +77,18 @@ public class MainActivity extends AppCompatActivity {
 //
 //            return true;
         if (id == R.id.action_update) {
+            countdown.cancel();
+
             TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
             fragment.runAnimationOrko();
             fragment.updateModel();
 
-            fragment.startCountdownTimer();
+            startCountdownTimer();
 
             return true;
         } else if (id == R.id.action_preferences) {
+            countdown.cancel();
+
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
             return true;
@@ -85,17 +97,37 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    // Preferences management
-//    // ======================
-//    SharedPreferences sharedPreferences;
-//    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-//        @Override
-//        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-//        }
-//    };
+    public void startCountdownTimer() {
+        float timeout = this.timeout * 60 * 1000;
+        try {
+            countdown.cancel();
+        } catch (NullPointerException ignored) {
+        }
+
+        countdown = new CountDownTimer((long) timeout, 3000) {
+
+            @Override
+            public void onTick(long tick) {
+                TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                fragment.runAnimationSkeletor(tick, timeout);
+            }
+
+            @Override
+            public void onFinish() {
+                TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                fragment.runAnimationBeastMan();
+
+                this.cancel();
+            }
+        };
+        countdown.start();
+    }
 
     public Menu getMainMenu() {
         return mainMenu;
     }
+
+//    public CountDownTimer getCountdown() {
+//        return countdown;
+//    }
 }
