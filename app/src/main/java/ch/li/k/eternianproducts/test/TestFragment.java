@@ -7,7 +7,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
@@ -15,12 +14,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import java.util.Objects;
@@ -31,21 +29,21 @@ import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
 public class TestFragment extends Fragment {
 
+    private static final long TMAX = 30;
+
     int bound10;
     int nElements;
-    private int timeout;
-    private int t0 = 1000;
-    private int dt = 3000;
-
-    public FrameLayout animationBarTop;
-    public FrameLayout animationBarBottom;
+    private String operators;
+    private int t0, t1, tmax;
 
     private Uri videoUri;
     private VideoView video;
-    private String operators;
     private TestAdapter adapter;
-    private CountDownTimer countdown;
     private RecyclerView recyclerView;
+
+    public View animationContainer;
+    public FrameLayout animationBarTop;
+    public FrameLayout animationBarBottom;
 
     // Fragment instantiation
     // ======================
@@ -71,50 +69,12 @@ public class TestFragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
 
         initPreferences();
-        startCountdownTimer();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_castle");
-    }
-
-    // Observer
-    Observer observer = new Observer() {
-        @Override
-        public void onChanged(@Nullable Object o) {
-            boolean allCorrect = Objects.requireNonNull(adapter.getTestModelList().getAllCorrect().getValue())
-                    .stream().allMatch(isCorrect -> isCorrect);
-            if (allCorrect) {
-                System.out.println("\n\n--> Change triggered! Now running video...");
-                runAnimationHeMan();
-            }
-        }
-    };
-
-    // Countdown timer
-    public void startCountdownTimer() {
-        float timeout = this.timeout * 60000;
-        try {
-            countdown.cancel();
-        } catch (NullPointerException ignored) {
-        }
-
-        countdown = new CountDownTimer((long) timeout, 3000) {
-
-            @Override
-            public void onTick(long tick) {
-                runAnimationSkeletor(tick, timeout);
-            }
-
-            @Override
-            public void onFinish() {
-                runAnimationBeastMan();
-                this.cancel();
-            }
-        };
-        countdown.start();
     }
 
     // Preferences management
@@ -124,7 +84,6 @@ public class TestFragment extends Fragment {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
             bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
             nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
@@ -138,17 +97,52 @@ public class TestFragment extends Fragment {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
         nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
-        dt = 10000;
-        if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI")) {
-            dt = 6000 * nElements / timeout;
-        }
-
         updateModel(nElements, bound10, operators);
     }
+
+    // Countdown timer
+    // ===============
+    CountDownTimer timer = new CountDownTimer(TMAX * 1000, 1000) {
+        long timeOffset = 0;
+        long accumulator = 0;
+
+        @Override
+        public void onTick(long tick) {
+            accumulator += 2000;
+            timeOffset = TMAX * 1000 - tick;
+            Log.d("DEBUG", "Time offset now at: " + String.valueOf(timeOffset * 1e-3));
+
+//            if (timeOffset * 1e-3 > 10 & timeOffset * 1e-3 < 20) {
+//                video.pause();
+//            } else if (timeOffset * 1e-3 > 20) {
+//                Log.d("DEBUG", "Resuming video!");
+////                video.seekTo(20 * 1000);
+//                video.resume();
+//            }
+//            Log.d("\n\n--> DEBUG", "Video location: " + video.getCurrentPosition());
+        }
+
+        @Override
+        public void onFinish() {
+            video.stopPlayback();
+            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
+        }
+    };
+
+    Observer observer = new Observer() {
+        @Override
+        public void onChanged(@Nullable Object o) {
+            boolean allCorrect = Objects.requireNonNull(adapter.getTestModelList().getAllCorrect().getValue())
+                    .stream().allMatch(isCorrect -> isCorrect);
+            if (allCorrect) {
+                System.out.println("\n\n--> Change triggered! Now running video...");
+                runAnimationHeMan();
+            }
+        }
+    };
 
     // Model interaction and animations
     // ================================
@@ -161,82 +155,65 @@ public class TestFragment extends Fragment {
         adapter.testModelList.updateModelList(nElements, bound10, operators);
         adapter.notifyDataSetChanged();
 
-        startCountdownTimer();
+        ((MainActivity) getActivity()).startCountdownTimer();
     }
 
     public void runAnimationHeMan() {
-        // TODO: might want to stop timer here
+//        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_heman, animationBarBottom);
         container.setVisibility(View.VISIBLE);
 
-        InputMethodManager inputManager = (InputMethodManager) container.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputManager != null) {
-            inputManager.hideSoftInputFromWindow(container.getWindowToken(), 0);
-        }
-
-        ProgressBar progress = container.findViewById(R.id.progressBar);
-
         video = container.findViewById(R.id.video_heman); // TODO: perhaps making video global might help...!
         video.setVideoURI(this.videoUri);
         video.start();
-
-        t0 = sharedPreferences.getInt("videoPosition", 0);
-        video.setOnPreparedListener(mp -> {
-            progress.setMax(video.getDuration());
-            progress.setProgress(t0);
-            video.seekTo(t0);
-        });
-
-        Handler videoHandler = new Handler();
-        videoHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int currentPosition = video.getCurrentPosition();
-                progress.setProgress((int) currentPosition);
-                if (currentPosition > t0 + dt) {
-                    System.out.println("Video position: " + currentPosition + " of " + t0 + dt);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    System.out.println("Time for video length: " + dt);
-                    editor.putInt("videoPosition", currentPosition);
-                    video.stopPlayback();
-                    editor.apply();
-                    ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
-                } else {
-                    videoHandler.postDelayed(this, 1000);
-                }
-            }
-        }, 1000);
+        timer.start();
 
         video.setOnCompletionListener((v) -> {
-//            timer.cancel();
+            timer.cancel();
             video.stopPlayback();
             ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
         });
     }
 
     public void runAnimationOrko() {
-        View animationContainer = LayoutInflater.from(getContext())
+        // Why remove observer!?!
+//        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
+
+//        try {
+//            animationBarBottom.removeAllViews();
+//        } catch (NullPointerException ignored) {
+//        }
+
+        View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_orko, animationBarBottom);
-        animationContainer.setVisibility(View.VISIBLE);
+        container.setVisibility(View.VISIBLE);
 
         TransitionManager.beginDelayedTransition(animationBarBottom);
-        animationContainer.postDelayed(() -> {
+        container.postDelayed(() -> {
             TransitionManager.beginDelayedTransition(animationBarBottom);
-            animationContainer.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
         }, 3000);
+
+        // Restart observing all correct
+//        new Handler().postDelayed(() -> adapter.getTestModelList().getAllCorrect().observe(TestFragment.this, observer), 1000);
     }
 
     public void runAnimationBeastMan() {
-        View animationContainer = LayoutInflater.from(getContext())
+//        try {
+//            animationBarBottom.removeAllViews();
+//        } catch (NullPointerException ignored) {
+//        }
+
+        View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_game_over, animationBarBottom);
-        animationContainer.setVisibility(View.GONE);
+        container.setVisibility(View.GONE);
 
         TransitionManager.beginDelayedTransition(animationBarBottom);
-        animationContainer.postDelayed(() -> {
+        container.postDelayed(() -> {
             TransitionManager.beginDelayedTransition(animationBarBottom);
-            animationContainer.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
         }, 3000);
 
         MediaPlayer player = MediaPlayer.create(getContext(), R.raw.skeletor_laugh);
@@ -244,7 +221,7 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationSkeletor(long tick, float timeout) {
-        View animationContainer = LayoutInflater.from(getContext())
+        animationContainer = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_skeletor, animationBarTop);
         animationContainer.setAlpha((float) ((timeout - tick) / timeout));
     }
