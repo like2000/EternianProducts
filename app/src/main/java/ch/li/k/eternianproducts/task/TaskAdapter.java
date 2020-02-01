@@ -4,10 +4,7 @@ import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
@@ -17,8 +14,6 @@ import java.util.List;
 import ch.li.k.eternianproducts.BR;
 import ch.li.k.eternianproducts.R;
 import ch.li.k.eternianproducts.databinding.FragmentTaskItemBinding;
-
-import static android.content.ContentValues.TAG;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 

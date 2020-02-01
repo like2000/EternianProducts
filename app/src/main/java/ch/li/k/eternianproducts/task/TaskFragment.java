@@ -124,7 +124,6 @@ public class TaskFragment extends Fragment {
             }
         }));
 
-
 //        viewModel.getTaskList().getValue().get(0).getCheck().observe(this, new Observer<Boolean>() {
 //            @Override
 //            public void onChanged(@Nullable Boolean aBoolean) {
@@ -147,28 +146,6 @@ public class TaskFragment extends Fragment {
 //        }
 //
     }
-
-//    FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener((View view) -> {
-////            viewModel.generateList();
-////            adapter.notifyDataSetChanged();
-//
-//        LinearLayout animationBottomBar = findViewById(R.id.animationBottomBar);
-//        animationBottomBar.removeAllViews();
-//        LayoutInflater inflaterBottom = LayoutInflater.from(MainActivity.this);
-//        View imageBottom = inflaterBottom.inflate(R.layout.animation_orko, animationBottomBar);
-//
-//        TransitionManager.beginDelayedTransition(animationBottomBar);
-//        imageBottom.setVisibility(View.VISIBLE);
-//        imageBottom.postDelayed(() -> {
-//            TransitionManager.beginDelayedTransition(animationBottomBar);
-//            imageBottom.setVisibility(View.GONE);
-//        }, 1500);
-//
-//        countdown.start();
-////                visible = !visible;
-////                imageBottom.setVisibility(visible ? View.VISIBLE : View.GONE);
-//    });
 
     @Override
     public void onAttach(Context context) {

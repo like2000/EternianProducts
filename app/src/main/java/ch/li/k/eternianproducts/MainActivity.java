@@ -14,11 +14,12 @@ import ch.li.k.eternianproducts.test.TestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
+
     private CountDownTimer countdown;
     private Menu mainMenu;
     private int timeout;
 
-    SharedPreferences sharedPreferences;
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
