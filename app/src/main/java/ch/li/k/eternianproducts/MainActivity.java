@@ -18,10 +18,12 @@ public class MainActivity extends AppCompatActivity {
     private Menu mainMenu;
     private CountDownTimer countdown;
 
-    // Main activity creation
-    // ======================
+    // Main activity instantiation
+    // ===========================
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Set main content
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

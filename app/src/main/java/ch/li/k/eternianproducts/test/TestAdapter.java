@@ -2,9 +2,12 @@ package ch.li.k.eternianproducts.test;
 
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -14,8 +17,8 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
-    private boolean isVirgin;
     TestModelList testModelList;
+    private boolean isVirgin;
 
     // Adapter for one row - model to view
     // ===================================
@@ -35,20 +38,52 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         // Bit more logic now... - need more listeners!
         // ============================================
-        holder.result.setOnFocusChangeListener((v, hasFocus) -> {
-            holder.result.postDelayed(() -> {
-                if (!hasFocus) {
-                    System.out.println("--> Output: " + holder.result.getText());
-                    if (holder.result.getText() != null) {
-                        checkCorrect();
-                        isVirgin = false;
-                        notifyItemChanged(position);
+        holder.result.setOnEditorActionListener(
+                new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        int key = 0;
+                        try {
+                            key = event.getKeyCode();
+                        } catch (Exception ignore) {
+                        }
+                        if (actionId == EditorInfo.IME_ACTION_NEXT
+                                || actionId == EditorInfo.IME_ACTION_DONE
+                                || key == KeyEvent.KEYCODE_ENTER
+                                || key == KeyEvent.KEYCODE_TAB) {
+//                            System.out.println("Other event: " + event.getKeyCode());
+                            if (holder.result.getText() != null) {
+                                checkCorrect();
+                                isVirgin = false;
+                                notifyItemChanged(position);
+                            }
+                            return true;
+                        }
+                        else {
+                            System.out.println("Other event: " + actionId);
+                            try {
+                                System.out.println("Other event: " + event.getKeyCode());
+                            } catch (Exception ignore) { }
+                        }
+                        return false;
                     }
-                }
-            }, 100);
-        });
+                });
+
+//        holder.result.setOnFocusChangeListener((v, hasFocus) -> {
+//            holder.result.postDelayed(() -> {
+//                if (!hasFocus) {
+//                    System.out.println("--> Output: " + holder.result.getText());
+//                    if (holder.result.getText() != null) {
+//                        checkCorrect();
+//                        isVirgin = false;
+//                        notifyItemChanged(position);
+//                    }
+//                }
+//            }, 100);
+//        });
 
         holder.bind(testModelList.get(position));
         if (isVirgin) holder.result.getText().clear();
