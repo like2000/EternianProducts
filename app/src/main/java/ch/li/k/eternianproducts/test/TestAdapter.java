@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -42,34 +41,32 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         // Bit more logic now... - need more listeners!
         // ============================================
         holder.result.setOnEditorActionListener(
-                new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        int key = 0;
-                        try {
-                            key = event.getKeyCode();
-                        } catch (Exception ignore) {
-                        }
-                        if (actionId == EditorInfo.IME_ACTION_NEXT
-                                || actionId == EditorInfo.IME_ACTION_DONE
-                                || key == KeyEvent.KEYCODE_ENTER
-                                || key == KeyEvent.KEYCODE_TAB) {
-//                            System.out.println("Other event: " + event.getKeyCode());
-                            if (holder.result.getText() != null) {
-                                checkCorrect();
-                                isVirgin = false;
-                                notifyItemChanged(position);
-                            }
-                            return true;
-                        }
-                        else {
-                            System.out.println("Other event: " + actionId);
-                            try {
-                                System.out.println("Other event: " + event.getKeyCode());
-                            } catch (Exception ignore) { }
-                        }
-                        return false;
+                (view, actionId, keyEvent) -> {
+                    int key = 0;
+                    try {
+                        key = keyEvent.getKeyCode();
+                        System.out.println("Other event: " + key); // Tab doesn't trigger anything here!
+                    } catch (Exception ignore) {
                     }
+                    if (actionId == EditorInfo.IME_ACTION_NEXT
+                            || actionId == EditorInfo.IME_ACTION_DONE
+                            || key == KeyEvent.KEYCODE_ENTER
+                            || key == KeyEvent.KEYCODE_TAB) {
+//                            System.out.println("Other event: " + actionId);
+                        if (holder.result.getText() != null) {
+                            checkCorrect();
+                            isVirgin = false;
+                            notifyItemChanged(position);
+                        }
+                        return true;
+                    }
+//                        else {
+//                            System.out.println("Other event: " + actionId);
+//                            try {
+//                                System.out.println("Other event: " + event.getKeyCode());
+//                            } catch (Exception ignore) { }
+//                        }
+                    return false;
                 });
 
 //        holder.result.setOnFocusChangeListener((v, hasFocus) -> {
