@@ -144,24 +144,25 @@ public class TestFragment extends Fragment {
         }
 
         ProgressBar progress = container.findViewById(R.id.progressBar);
-        progress.setProgress(0);
-        progress.setMax(tmax * 1000);
 
         video = container.findViewById(R.id.video_heman); // TODO: perhaps making video global might help...!
         video.setVideoURI(this.videoUri);
         video.start();
 
         int t1 = t0 * 100 + tmax * 1000;
-        video.setOnPreparedListener(mp -> video.seekTo(t0 * 100));
+        video.setOnPreparedListener(mp -> {
+            video.seekTo(t0 * 100);
+            progress.setProgress(t0 * 100);
+            progress.setMax(video.getDuration());
+        });
 
         Handler videoHandler = new Handler();
         videoHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                float duration = video.getDuration();
-                float currentPosition = video.getCurrentPosition();
-                System.out.println("Video position: " + currentPosition / 1000 + " of " + t1);
-                progress.setProgress((int) currentPosition - t0);
+                int currentPosition = video.getCurrentPosition();
+                System.out.println("Video position: " + currentPosition + " of " + t1);
+                progress.setProgress((int) currentPosition);
                 if (video.getCurrentPosition() > t1) {
                     video.stopPlayback();
                     t0 = video.getCurrentPosition();
@@ -181,26 +182,26 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationOrko() {
-        View container = LayoutInflater.from(getContext())
+        View animationContainer = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_orko, animationBarBottom);
-        container.setVisibility(View.VISIBLE);
+        animationContainer.setVisibility(View.VISIBLE);
 
         TransitionManager.beginDelayedTransition(animationBarBottom);
-        container.postDelayed(() -> {
+        animationContainer.postDelayed(() -> {
             TransitionManager.beginDelayedTransition(animationBarBottom);
-            container.setVisibility(View.GONE);
+            animationContainer.setVisibility(View.GONE);
         }, 3000);
     }
 
     public void runAnimationBeastMan() {
-        View container = LayoutInflater.from(getContext())
+        View animationContainer = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_game_over, animationBarBottom);
-        container.setVisibility(View.GONE);
+        animationContainer.setVisibility(View.GONE);
 
         TransitionManager.beginDelayedTransition(animationBarBottom);
-        container.postDelayed(() -> {
+        animationContainer.postDelayed(() -> {
             TransitionManager.beginDelayedTransition(animationBarBottom);
-            container.setVisibility(View.VISIBLE);
+            animationContainer.setVisibility(View.VISIBLE);
         }, 3000);
 
         MediaPlayer player = MediaPlayer.create(getContext(), R.raw.skeletor_laugh);
@@ -208,7 +209,7 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationSkeletor(long tick, float timeout) {
-        animationContainer = LayoutInflater.from(getContext())
+        View animationContainer = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_skeletor, animationBarTop);
         animationContainer.setAlpha((float) ((timeout - tick) / timeout));
     }
