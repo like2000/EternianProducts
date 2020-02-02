@@ -29,7 +29,7 @@
         android:summary="Select maximum range for numbers used"
         android:title="Calculation range" />
     <DropDownPreference
-        android:defaultValue="3"
+        android:defaultValue="4"
         android:dialogIcon="@android:drawable/arrow_down_float"
         android:entries="@array/nElements"
         android:entryValues="@array/nElements"
