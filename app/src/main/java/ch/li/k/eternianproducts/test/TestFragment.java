@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,16 +14,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import ch.li.k.eternianproducts.MainActivity;
 import ch.li.k.eternianproducts.R;
@@ -32,12 +30,12 @@ import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
 public class TestFragment extends Fragment {
 
-    private static final long TMAX = 30;
+    private int t0 = 1000;
+    private int tmax = 30;
 
     int bound10;
     int nElements;
     private String operators;
-    private int t0, t1, tmax;
 
     public View animationContainer;
     public FrameLayout animationBarTop;
@@ -47,35 +45,6 @@ public class TestFragment extends Fragment {
     private VideoView video;
     private TestAdapter adapter;
     private RecyclerView recyclerView;
-
-    // Countdown timer
-    // ===============
-    CountDownTimer timer = new CountDownTimer(TMAX * 1000, 1000) {
-        long timeOffset = 0;
-        long accumulator = 0;
-
-        @Override
-        public void onTick(long tick) {
-            accumulator += 2000;
-            timeOffset = TMAX * 1000 - tick;
-            Log.d("DEBUG", "Time offset now at: " + String.valueOf(timeOffset * 1e-3));
-
-//            if (timeOffset * 1e-3 > 10 & timeOffset * 1e-3 < 20) {
-//                video.pause();
-//            } else if (timeOffset * 1e-3 > 20) {
-//                Log.d("DEBUG", "Resuming video!");
-////                video.seekTo(20 * 1000);
-//                video.resume();
-//            }
-//            Log.d("\n\n--> DEBUG", "Video location: " + video.getCurrentPosition());
-        }
-
-        @Override
-        public void onFinish() {
-            video.stopPlayback();
-            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
-        }
-    };
 
     // Fragment instantiation
     // ======================
@@ -169,56 +138,40 @@ public class TestFragment extends Fragment {
                 .inflate(R.layout.animation_heman, animationBarBottom);
         container.setVisibility(View.VISIBLE);
 
+        InputMethodManager inputManager = (InputMethodManager) container.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.hideSoftInputFromWindow(container.getWindowToken(), 0);
+        }
+
         ProgressBar progress = container.findViewById(R.id.progressBar);
         progress.setProgress(0);
-        progress.setMax(100);
+        progress.setMax(tmax * 1000);
 
         video = container.findViewById(R.id.video_heman); // TODO: perhaps making video global might help...!
         video.setVideoURI(this.videoUri);
         video.start();
-//        timer.start();
 
-        AtomicInteger duration = new AtomicInteger();
-        video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                duration.set(video.getDuration());
-            }
-        });
-
-//        int current;
-//        int duration = video.getDuration();
-//
-//        do {
-//            current = video.getCurrentPosition();
-//            System.out.println("duration - " + duration + " current- " + current);
-//            try {
-//                progress.setProgress(((int) (current * 100 / duration)));
-//                if(progress.getProgress() >= 100){
-//                    break;
-//                }
-//            } catch (Exception e) {
-//            }
-//        } while (progress.getProgress() <= 100);
+        int t1 = t0 * 100 + tmax * 1000;
+        video.setOnPreparedListener(mp -> video.seekTo(t0 * 100));
 
         Handler videoHandler = new Handler();
         videoHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int currentPosition = video.getCurrentPosition();
-                System.out.println("Video position: " + currentPosition);
-                if (video.getCurrentPosition() > 10000) {
-//                Log.d("DEBUG", "Video time " + video.getCurrentPosition());
-//                timer.cancel();
+                float duration = video.getDuration();
+                float currentPosition = video.getCurrentPosition();
+                System.out.println("Video position: " + currentPosition / 1000 + " of " + t1);
+                progress.setProgress((int) currentPosition - t0);
+                if (video.getCurrentPosition() > t1) {
                     video.stopPlayback();
+                    t0 = video.getCurrentPosition();
                     ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
                 }
                 else {
                     videoHandler.postDelayed(this, 1000);
                 }
             }
-        }, 1000
-        );
+        }, 1000);
 
 //        video.setOnCompletionListener((v) -> {
 //            timer.cancel();
@@ -228,14 +181,6 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationOrko() {
-        // Why remove observer!?!
-//        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
-
-//        try {
-//            animationBarBottom.removeAllViews();
-//        } catch (NullPointerException ignored) {
-//        }
-
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_orko, animationBarBottom);
         container.setVisibility(View.VISIBLE);
@@ -245,17 +190,9 @@ public class TestFragment extends Fragment {
             TransitionManager.beginDelayedTransition(animationBarBottom);
             container.setVisibility(View.GONE);
         }, 3000);
-
-        // Restart observing all correct
-//        new Handler().postDelayed(() -> adapter.getTestModelList().getAllCorrect().observe(TestFragment.this, observer), 1000);
     }
 
     public void runAnimationBeastMan() {
-//        try {
-//            animationBarBottom.removeAllViews();
-//        } catch (NullPointerException ignored) {
-//        }
-
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_game_over, animationBarBottom);
         container.setVisibility(View.GONE);
