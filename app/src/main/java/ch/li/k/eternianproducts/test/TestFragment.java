@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ public class TestFragment extends Fragment {
 
     int bound10;
     int nElements;
+    private int timeout;
     private int t0 = 1000;
     private int dt = 3000;
 
@@ -42,6 +44,7 @@ public class TestFragment extends Fragment {
     private VideoView video;
     private String operators;
     private TestAdapter adapter;
+    private CountDownTimer countdown;
     private RecyclerView recyclerView;
 
     // Fragment instantiation
@@ -68,6 +71,7 @@ public class TestFragment extends Fragment {
         ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false); // Simple fix for flickering view
 
         initPreferences();
+        startCountdownTimer();
     }
 
     @Override
@@ -76,6 +80,7 @@ public class TestFragment extends Fragment {
         this.videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + "heman_castle");
     }
 
+    // Observer
     Observer observer = new Observer() {
         @Override
         public void onChanged(@Nullable Object o) {
@@ -88,6 +93,30 @@ public class TestFragment extends Fragment {
         }
     };
 
+    // Countdown timer
+    public void startCountdownTimer() {
+        float timeout = this.timeout * 60000;
+        try {
+            countdown.cancel();
+        } catch (NullPointerException ignored) {
+        }
+
+        countdown = new CountDownTimer((long) timeout, 3000) {
+
+            @Override
+            public void onTick(long tick) {
+                runAnimationSkeletor(tick, timeout);
+            }
+
+            @Override
+            public void onFinish() {
+                runAnimationBeastMan();
+                this.cancel();
+            }
+        };
+        countdown.start();
+    }
+
     // Preferences management
     // ======================
     SharedPreferences sharedPreferences;
@@ -95,6 +124,7 @@ public class TestFragment extends Fragment {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
             bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
             nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
@@ -108,12 +138,13 @@ public class TestFragment extends Fragment {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
         operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
+        timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
         nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
         dt = 10000;
         if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI")) {
-            dt = 6000 * nElements;
+            dt = 6000 * nElements / timeout;
         }
 
         updateModel(nElements, bound10, operators);
@@ -130,7 +161,7 @@ public class TestFragment extends Fragment {
         adapter.testModelList.updateModelList(nElements, bound10, operators);
         adapter.notifyDataSetChanged();
 
-        ((MainActivity) getActivity()).startCountdownTimer();
+        startCountdownTimer();
     }
 
     public void runAnimationHeMan() {
