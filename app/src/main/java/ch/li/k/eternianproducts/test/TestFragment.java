@@ -165,6 +165,8 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationHeMan() {
+        // TODO: might want to stop timer here
+
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_heman, animationBarBottom);
         container.setVisibility(View.VISIBLE);
@@ -196,6 +198,7 @@ public class TestFragment extends Fragment {
                 if (currentPosition > t0 + dt) {
                     System.out.println("Video position: " + currentPosition + " of " + t0 + dt);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
+                    System.out.println("Time for video length: " + dt);
                     editor.putInt("videoPosition", currentPosition);
                     video.stopPlayback();
                     editor.apply();
