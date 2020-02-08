@@ -30,19 +30,17 @@ import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
 
 public class TestFragment extends Fragment {
 
-    private int t0 = 1000;
-    private int tmax = 30;
-
     int bound10;
     int nElements;
-    private String operators;
+    private int t0 = 1000;
+    private int dt = 3000;
 
-    public View animationContainer;
     public FrameLayout animationBarTop;
     public FrameLayout animationBarBottom;
 
     private Uri videoUri;
     private VideoView video;
+    private String operators;
     private TestAdapter adapter;
     private RecyclerView recyclerView;
 
@@ -93,7 +91,6 @@ public class TestFragment extends Fragment {
     // Preferences management
     // ======================
     SharedPreferences sharedPreferences;
-
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -114,6 +111,11 @@ public class TestFragment extends Fragment {
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
         nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
+        dt = 10000;
+        if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI")) {
+            dt = 6000 * nElements;
+        }
+
         updateModel(nElements, bound10, operators);
     }
 
@@ -132,8 +134,6 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationHeMan() {
-//        adapter.getTestModelList().getAllCorrect().removeObservers(TestFragment.this);
-
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_heman, animationBarBottom);
         container.setVisibility(View.VISIBLE);
@@ -149,11 +149,11 @@ public class TestFragment extends Fragment {
         video.setVideoURI(this.videoUri);
         video.start();
 
-        int t1 = t0 * 100 + tmax * 1000;
+        t0 = sharedPreferences.getInt("videoPosition", 0);
         video.setOnPreparedListener(mp -> {
-            video.seekTo(t0 * 100);
-            progress.setProgress(t0 * 100);
             progress.setMax(video.getDuration());
+            progress.setProgress(t0);
+            video.seekTo(t0);
         });
 
         Handler videoHandler = new Handler();
@@ -161,24 +161,25 @@ public class TestFragment extends Fragment {
             @Override
             public void run() {
                 int currentPosition = video.getCurrentPosition();
-                System.out.println("Video position: " + currentPosition + " of " + t1);
                 progress.setProgress((int) currentPosition);
-                if (video.getCurrentPosition() > t1) {
+                if (currentPosition > t0 + dt) {
+                    System.out.println("Video position: " + currentPosition + " of " + t0 + dt);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("videoPosition", currentPosition);
                     video.stopPlayback();
-                    t0 = video.getCurrentPosition();
+                    editor.apply();
                     ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
-                }
-                else {
+                } else {
                     videoHandler.postDelayed(this, 1000);
                 }
             }
         }, 1000);
 
-//        video.setOnCompletionListener((v) -> {
+        video.setOnCompletionListener((v) -> {
 //            timer.cancel();
-//            video.stopPlayback();
-//            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
-//        });
+            video.stopPlayback();
+            ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
+        });
     }
 
     public void runAnimationOrko() {
