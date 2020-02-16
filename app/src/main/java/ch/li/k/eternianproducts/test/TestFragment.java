@@ -165,7 +165,7 @@ public class TestFragment extends Fragment {
     }
 
     public void runAnimationHeMan() {
-        // TODO: might want to stop timer here
+        countdown.cancel();
 
         View container = LayoutInflater.from(getContext())
                 .inflate(R.layout.animation_heman, animationBarBottom);
@@ -226,6 +226,8 @@ public class TestFragment extends Fragment {
             TransitionManager.beginDelayedTransition(animationBarBottom);
             animationContainer.setVisibility(View.GONE);
         }, 3000);
+
+        startCountdownTimer();
     }
 
     public void runAnimationBeastMan() {

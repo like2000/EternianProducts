@@ -17,6 +17,7 @@ import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
 public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
 
     TestModelList testModelList;
+    private RecyclerView recyclerView;
     private boolean isVirgin;
 
     // Adapter for one row - model to view
@@ -25,6 +26,13 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
         isVirgin = true;
 //        setHasStableIds(true);
         testModelList = new TestModelList();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        this.recyclerView = recyclerView;
     }
 
     @Override
@@ -48,16 +56,16 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
                         System.out.println("Other event: " + key); // Tab doesn't trigger anything here!
                     } catch (Exception ignore) {
                     }
-                    if (actionId == EditorInfo.IME_ACTION_NEXT
-                            || actionId == EditorInfo.IME_ACTION_DONE
+                    if (actionId == EditorInfo.IME_ACTION_DONE
                             || key == KeyEvent.KEYCODE_ENTER
                             || key == KeyEvent.KEYCODE_TAB) {
-//                            System.out.println("Other event: " + actionId);
+                        System.out.println("Other event: " + actionId);
                         if (holder.result.getText() != null) {
                             checkCorrect();
                             isVirgin = false;
                             notifyItemChanged(position);
                         }
+                        notifyDataSetChanged();
                         return true;
                     }
 //                        else {
@@ -69,18 +77,18 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
                     return false;
                 });
 
-//        holder.result.setOnFocusChangeListener((v, hasFocus) -> {
-//            holder.result.postDelayed(() -> {
-//                if (!hasFocus) {
-//                    System.out.println("--> Output: " + holder.result.getText());
-//                    if (holder.result.getText() != null) {
-//                        checkCorrect();
-//                        isVirgin = false;
-//                        notifyItemChanged(position);
-//                    }
-//                }
-//            }, 100);
-//        });
+        holder.result.setOnFocusChangeListener((v, hasFocus) -> {
+            holder.result.postDelayed(() -> {
+                if (!hasFocus) {
+                    System.out.println("--> Output: " + holder.result.getText());
+                    if (holder.result.getText() != null) {
+                        checkCorrect();
+                        isVirgin = false;
+                        notifyItemChanged(position);
+                    }
+                }
+            }, 100);
+        });
 
         holder.bind(testModelList.get(position));
         if (isVirgin) holder.result.getText().clear();
