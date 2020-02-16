@@ -1,4 +1,4 @@
-package ch.li.k.eternianproducts.test;
+package ch.li.k.eternianproducts.quest;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.ColorDrawable;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class TestModelList extends ArrayList<TestModelList.TestModel> {
+public class QuestModelList extends ArrayList<QuestModelList.QuestModel> {
     private static final ColorDrawable redTrans = new ColorDrawable(0xa0ff0000);
     private static final ColorDrawable greenTrans = new ColorDrawable(0xa0228B22);
     private static final ColorDrawable silverTrans = new ColorDrawable(0xA0C0C0C0);
@@ -23,7 +23,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 
     private MutableLiveData<ArrayList<Boolean>> allCorrect;
 
-    TestModelList() {
+    QuestModelList() {
         allCorrect = new MutableLiveData<>();
         updateModelList();
     }
@@ -40,7 +40,7 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
             b = rng10.nextInt(bound10) + 1;
             op = ops[rng2.nextInt(bound2)];
 
-            this.add(new TestModel(a, b, op));
+            this.add(new QuestModel(a, b, op));
         }
     }
 
@@ -88,14 +88,14 @@ public class TestModelList extends ArrayList<TestModelList.TestModel> {
 //        this.updateModelList();
 //    }
 
-    public class TestModel {
+    public class QuestModel {
         public Integer arg1, arg2, result;
         public ColorDrawable color;
         public String operator;
 
         boolean correct;
 
-        TestModel(int arg1, int arg2, String operator) {
+        QuestModel(int arg1, int arg2, String operator) {
 
             switch (operator) {
                 case ("*"):

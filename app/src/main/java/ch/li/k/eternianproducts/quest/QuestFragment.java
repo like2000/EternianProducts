@@ -1,4 +1,4 @@
-package ch.li.k.eternianproducts.test;
+package ch.li.k.eternianproducts.quest;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
@@ -27,9 +27,9 @@ import java.util.Objects;
 
 import ch.li.k.eternianproducts.MainActivity;
 import ch.li.k.eternianproducts.R;
-import ch.li.k.eternianproducts.databinding.FragmentTestBinding;
+import ch.li.k.eternianproducts.databinding.FragmentQuestBinding;
 
-public class TestFragment extends Fragment {
+public class QuestFragment extends Fragment {
 
     int bound10;
     int nElements;
@@ -43,7 +43,7 @@ public class TestFragment extends Fragment {
     private Uri videoUri;
     private VideoView video;
     private String operators;
-    private TestAdapter adapter;
+    private QuestAdapter adapter;
     private CountDownTimer countdown;
     private RecyclerView recyclerView;
 
@@ -51,7 +51,7 @@ public class TestFragment extends Fragment {
     // ======================
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        FragmentTestBinding binding = FragmentTestBinding.inflate(inflater, container, false);
+        FragmentQuestBinding binding = FragmentQuestBinding.inflate(inflater, container, false);
         animationBarBottom = binding.animationBarBottom;
         animationBarTop = binding.animationBarTop;
         recyclerView = binding.recyclerTest;
@@ -63,8 +63,8 @@ public class TestFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new TestAdapter();
-        adapter.getTestModelList().getAllCorrect().observe(this, observer);
+        adapter = new QuestAdapter();
+        adapter.getQuestModelList().getAllCorrect().observe(this, observer);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -84,7 +84,7 @@ public class TestFragment extends Fragment {
     Observer observer = new Observer() {
         @Override
         public void onChanged(@Nullable Object o) {
-            boolean allCorrect = Objects.requireNonNull(adapter.getTestModelList().getAllCorrect().getValue())
+            boolean allCorrect = Objects.requireNonNull(adapter.getQuestModelList().getAllCorrect().getValue())
                     .stream().allMatch(isCorrect -> isCorrect);
             if (allCorrect) {
                 System.out.println("\n\n--> Change triggered! Now running video...");
@@ -128,6 +128,11 @@ public class TestFragment extends Fragment {
             bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
             nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
+            dt = 1000;
+            if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI")) {
+                dt = 6000 * nElements / timeout;
+            }
+
             updateModel(nElements, bound10, operators);
         }
     };
@@ -142,7 +147,7 @@ public class TestFragment extends Fragment {
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
         nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
-        dt = 10000;
+        dt = 1000;
         if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI")) {
             dt = 6000 * nElements / timeout;
         }
@@ -153,12 +158,12 @@ public class TestFragment extends Fragment {
     // Model interaction and animations
     // ================================
     public void updateModel() {
-        adapter.testModelList.updateModelList();
+        adapter.questModelList.updateModelList();
         adapter.notifyDataSetChanged();
     }
 
     public void updateModel(int nElements, int bound10, String operators) {
-        adapter.testModelList.updateModelList(nElements, bound10, operators);
+        adapter.questModelList.updateModelList(nElements, bound10, operators);
         adapter.notifyDataSetChanged();
 
         startCountdownTimer();

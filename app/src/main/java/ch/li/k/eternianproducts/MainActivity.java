@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import ch.li.k.eternianproducts.settings.SettingsActivity;
-import ch.li.k.eternianproducts.test.TestFragment;
+import ch.li.k.eternianproducts.quest.QuestFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.fragmentContainer, new TestFragment())
+                .replace(R.id.fragmentContainer, new QuestFragment())
                 .addToBackStack(null)
                 .commit();
 
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //            return true;
         if (id == R.id.action_update) {
-            TestFragment fragment = (TestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+            QuestFragment fragment = (QuestFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
             fragment.runAnimationOrko();
             fragment.updateModel();
 
@@ -85,7 +85,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    // Preferences management
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//
+//        finish();
+//    }
+
+    //    // Preferences management
 //    // ======================
 //    SharedPreferences sharedPreferences;
 //    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {

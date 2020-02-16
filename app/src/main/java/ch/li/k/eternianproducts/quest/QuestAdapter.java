@@ -1,4 +1,4 @@
-package ch.li.k.eternianproducts.test;
+package ch.li.k.eternianproducts.quest;
 
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
@@ -12,32 +12,24 @@ import java.util.ArrayList;
 
 import ch.li.k.eternianproducts.BR;
 import ch.li.k.eternianproducts.R;
-import ch.li.k.eternianproducts.databinding.FragmentTestItemBinding;
+import ch.li.k.eternianproducts.databinding.FragmentQuestItemBinding;
 
-public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
+public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> {
 
-    TestModelList testModelList;
-    private RecyclerView recyclerView;
+    QuestModelList questModelList;
     private boolean isVirgin;
 
     // Adapter for one row - model to view
     // ===================================
-    TestAdapter() {
+    QuestAdapter() {
         isVirgin = true;
 //        setHasStableIds(true);
-        testModelList = new TestModelList();
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-
-        this.recyclerView = recyclerView;
+        questModelList = new QuestModelList();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewDataBinding binding = FragmentTestItemBinding.inflate(
+        ViewDataBinding binding = FragmentQuestItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
 
         return new ViewHolder(binding);
@@ -90,28 +82,28 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
             }, 100);
         });
 
-        holder.bind(testModelList.get(position));
+        holder.bind(questModelList.get(position));
         if (isVirgin) holder.result.getText().clear();
     }
 
     @Override
     public int getItemCount() {
-        return testModelList.size();
+        return questModelList.size();
     }
 
     // Method to check if all values are good - is observed by fragment
     private void checkCorrect() {
         ArrayList<Boolean> allCorrect = new ArrayList<>();
 
-        for (TestModelList.TestModel testModel : testModelList) {
+        for (QuestModelList.QuestModel testModel : questModelList) {
             allCorrect.add(testModel.isCorrect());
         }
 
-        testModelList.getAllCorrect().setValue(allCorrect);
+        questModelList.getAllCorrect().setValue(allCorrect);
     }
 
-    TestModelList getTestModelList() {
-        return testModelList;
+    QuestModelList getQuestModelList() {
+        return questModelList;
     }
 
     // Key element - view holder with data binding
@@ -127,7 +119,7 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.ViewHolder> {
             this.result = binding.getRoot().findViewById(R.id.edResult);
         }
 
-        void bind(TestModelList.TestModel model) {
+        void bind(QuestModelList.QuestModel model) {
             binding.setVariable(BR.var, model);
             binding.executePendingBindings();
         }
