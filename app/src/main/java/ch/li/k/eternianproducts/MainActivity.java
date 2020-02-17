@@ -85,7 +85,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        finish();
+    }
+
+    //    @Override
 //    public void onBackPressed() {
 //        super.onBackPressed();
 //

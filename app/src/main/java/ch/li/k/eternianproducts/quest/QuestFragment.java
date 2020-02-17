@@ -33,9 +33,9 @@ public class QuestFragment extends Fragment {
 
     int bound10;
     int nElements;
-    private int timeout;
+    private float timeout;
     private int t0 = 1000;
-    private int dt = 3000;
+    private float dt = 3000;
 
     public FrameLayout animationBarTop;
     public FrameLayout animationBarBottom;
@@ -123,15 +123,7 @@ public class QuestFragment extends Fragment {
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
-            timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
-            bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
-            nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
-
-            dt = 1000;
-            if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI")) {
-                dt = 6000 * nElements / timeout;
-            }
+            updatePreferences(sharedPreferences);
 
             updateModel(nElements, bound10, operators);
         }
@@ -142,17 +134,25 @@ public class QuestFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
 
+        updatePreferences(sharedPreferences);
+
+        updateModel(nElements, bound10, operators);
+    }
+
+    private void updatePreferences(SharedPreferences sharedPreferences) {
         operators = sharedPreferences.getString("preference_operators", "MULTIDIVI");
         timeout = Integer.parseInt(sharedPreferences.getString("preference_timeout", "3"));
         bound10 = Integer.parseInt(sharedPreferences.getString("preference_calcRange", "12"));
         nElements = Integer.parseInt(sharedPreferences.getString("preference_nElements", "12"));
 
         dt = 1000;
-        if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI")) {
-            dt = 6000 * nElements / timeout;
-        }
+        int multiplicator = 0;
+        if (operators.contentEquals("PLUSPLUS") || operators.contentEquals("PLUSMINUS"))
+            multiplicator = 1;
+        else if (operators.contentEquals("MULTIMULTI") || operators.contentEquals("MULTIDIVI"))
+            multiplicator = 2;
 
-        updateModel(nElements, bound10, operators);
+        dt = (float) ((1000 * multiplicator * bound10 * nElements) / (Math.pow(timeout, 1.5)));
     }
 
     // Model interaction and animations
