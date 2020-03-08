@@ -216,7 +216,10 @@ public class QuestFragment extends Fragment {
 
         video.setOnCompletionListener((v) -> {
 //            timer.cancel();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("videoPosition", 0);
             video.stopPlayback();
+            editor.apply();
             ((MainActivity) getActivity()).getMainMenu().performIdentifierAction(R.id.action_update, 0);
         });
     }
